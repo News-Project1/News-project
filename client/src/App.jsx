@@ -13,6 +13,7 @@ import Bookmark from "./components/bookmark/bookmark";
 import ArticleCreation from "./components/articleCreation/articleCreation";
 import Admin from "./components/adminDash/admin";
 import Navbar from "./components/navbar/navbar";
+import Payment from "./components/payment/payment";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
 
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<AboutUs />} />
+        <Route path="/payment" element={<Payment />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/categories" element={<Catageries />} />
         <Route path="/articles" element={<Articles />} />
