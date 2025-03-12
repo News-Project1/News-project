@@ -3,18 +3,13 @@ const { Schema } = mongoose;
 
 const categorySchema = new Schema(
   {
-    name: {
-      type: String,
-      required: true,
-      unique: true
-    },
-    description: {
-      type: String
-    }
+    name: { type: String, required: true, unique: true },
+    description: { type: String },
+
+    // NEW: Tracks if category has videos
+    hasVideos: { type: Boolean, default: false }
   },
-  {
-    timestamps: true
-  }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model('Category', categorySchema);
