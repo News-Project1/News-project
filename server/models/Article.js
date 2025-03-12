@@ -13,15 +13,8 @@ const articleSchema = new Schema(
     status: { type: String, enum: ['pending', 'published', 'rejected'], default: 'pending' },
     publishDate: { type: Date },
     likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    reports: [
-      {
-        reportedBy: { type: Schema.Types.ObjectId, ref: 'User' },
-        reason: { type: String },
-        createdAt: { type: Date, default: Date.now }
-      }
-    ],
-
-    // NEW: Connects article with a premium video
+    views: { type: Number, default: 0 }, // ✅ New: Track article views in MongoDB
+    // ✅ NEW: Connects article with a premium video
     videoId: { type: Schema.Types.ObjectId, ref: 'Video' }
   },
   { timestamps: true }
