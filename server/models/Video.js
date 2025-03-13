@@ -9,6 +9,7 @@ const videoSchema = new Schema(
     thumbnail: { type: String }, // Preview image for the video
     categoryIds: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
     isPremium: { type: Boolean, default: true }, // True = requires subscription
+    isDeleted: { type: Boolean, default: false }, // ✅ Soft delete field
     views: { type: Number, default: 0 }, // Track views
     likes: [{ type: Schema.Types.ObjectId, ref: 'User' }]
   },

@@ -14,6 +14,7 @@ const articleSchema = new Schema(
     publishDate: { type: Date },
     likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     views: { type: Number, default: 0 }, // ✅ New: Track article views in MongoDB
+    isDeleted: { type: Boolean, default: false }, // ✅ Soft delete field
     // ✅ NEW: Connects article with a premium video
     videoId: { type: Schema.Types.ObjectId, ref: 'Video' }
   },
