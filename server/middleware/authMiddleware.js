@@ -1,14 +1,51 @@
-// const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
-// const verifyToken = (req, res, next) => {
-//     const token = req.cookies.token;
-//     if (!token) return res.status(401).json({ message: "Access Denied" });
+const authenticateUser = (req, res, next) => {
+  let token =
+    req.cookies.authtoken ||
+    (req.headers.authorization
+      ? req.headers.authorization.split(" ")[1]
+      : null);
 
-//     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-//         if (err) return res.status(403).json({ message: "Invalid Token" });
-//         req.user = decoded;
-//         next();
-//     });
-// };
+  console.log("Received Token:", token);
 
-// module.exports = verifyToken;
+  if (!token) {
+    return res
+      .status(401)
+      .json({ message: "Access denied. No token provided." });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("Decoded Token:", decoded); // Log the decoded token
+    req.user = decoded;
+    next();
+  } catch (error) {
+    console.error("JWT Verification Error:", error.message);
+    return res.status(401).json({ message: "Invalid token" });
+  }
+};
+
+const authenticateAdmin = (req, res, next) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res
+      .status(401)
+      .json({ message: "Access denied. No token provided." });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (decoded.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden: Admin access only." });
+    }
+    req.user = decoded;
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+};
+
+module.exports = { authenticateUser, authenticateAdmin };
