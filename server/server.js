@@ -7,6 +7,7 @@ const authRoutes = require('./routes/authRoutes');
 const articleRoutes = require("./routes/articleRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const connectDB = require("./config/db");
+require('./models');
 
 const app = express();
 app.use(express.json());

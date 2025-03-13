@@ -4,5 +4,6 @@ const articleController = require("../controllers/articleController");
 
 router.post("/", articleController.createArticle);
 router.get("/", articleController.getArticles);
-
+router.get("/:id", articleController.getArticleById);
+router.put("/:id", articleController.updateArticle);
 module.exports = router;
