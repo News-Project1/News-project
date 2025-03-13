@@ -3,11 +3,12 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema(
   {
-    name: { type: String, required: true },
+    full_name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, enum: ["reader", "journalist", "admin"], default: "reader" },
     isSubscribed: { type: Boolean, default: false }, // Tracks if user has paid
+    isDeleted: { type: Boolean, default: false }, // ✅ Soft delete field
     bookmarks: [{ type: Schema.Types.ObjectId, ref: "Article" }]
   },
   { timestamps: true }
