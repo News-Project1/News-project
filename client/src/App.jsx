@@ -14,12 +14,13 @@ import ArticleCreation from "./components/articleCreation/articleCreation";
 import Admin from "./components/adminDash/admin";
 import Navbar from "./components/navbar/navbar";
 import Payment from "./components/payment/payment";
+import DigiboostLandingPage from "./components/DigiboostLandingPage/DigiboostLandingPage"
 
 function App() {
   return (
     <Router>
 
-        <Navbar/>
+        {/* <Navbar/> */}
       <Routes>
 
         <Route path="/" element={<Home />} />
@@ -34,6 +35,8 @@ function App() {
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/bookmarks" element={<Bookmark />} />
         <Route path="/create-article" element={<ArticleCreation />} />
+        <Route path="/DigiboostLandingPage" element={<DigiboostLandingPage />} />
+
         <Route path="/admin" element={<Admin />} />
 
       </Routes>
