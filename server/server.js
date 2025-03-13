@@ -22,7 +22,7 @@ app.use(
 );
 connectDB();
 
-// app.use('/auth', authRoutes);
+app.use('/auth', authRoutes);
 app.use("/api/articles", articleRoutes);
 app.use("/api/categories", categoryRoutes);
 // app.use("/api/journalist", journalistRoutes);
