@@ -16,13 +16,13 @@ exports.createArticle = async (req, res) => {
     const newArticle = new Article({
       ...req.body,
       author: req.user._id, // Assign logged-in journalist as the author
-      status: "pending", // Default status is pending
-      views: 0,
       likes: [],
     });
 
     await newArticle.save();
     res.status(201).json(newArticle);
+    console.log(newArticle);
+    
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -63,24 +63,6 @@ exports.softDeleteArticle = async (req, res) => {
     await article.save();
 
     res.json({ message: "Article soft deleted successfully" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-// ✅ Restore a soft-deleted article
-exports.restoreArticle = async (req, res) => {
-  try {
-    const article = await Article.findOne({ _id: req.params.id, author: req.user._id });
-
-    if (!article || !article.isDeleted) {
-      return res.status(404).json({ message: "Article not found or not deleted." });
-    }
-
-    article.isDeleted = false;
-    await article.save();
-
-    res.json({ message: "Article restored successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
