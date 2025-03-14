@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import Sidebar from './Sidebar';
-import Header from './Header';
-import OverviewSection from './OverviewSection';
-import ContentSection from './ContentSection';
-import JournalistsSection from './JournalistsSection';
-import CommentsSection from './CommentsSection';
-import AnalyticsSection from './AnalyticsSection';
-import TrendingSection from './TrendingSection';
+import React, { useState, useEffect } from "react";
+import Sidebar from "./Sidebar";
+import Header from "./Header";
+import OverviewSection from "./OverviewSection";
+import ContentSection from "./ContentSection"; // تأكد من المسار الصحيح
+import JournalistsSection from "./JournalistsSection";
+import CommentsSection from "./CommentsSection";
+import AnalyticsSection from "./AnalyticsSection";
+import TrendingSection from "./TrendingSection";
+import SettingsSection from "./SettingsSection";
 import {
   Home,
   FileText,
@@ -16,67 +17,115 @@ import {
   Flag,
   BarChart2,
   TrendingUp,
-  Settings,} from 'lucide-react';
+  Settings,
+  LogOut,
+} from "lucide-react";
+import axios from "axios";
+
 const Admin = () => {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState("overview");
+  const [articles, setArticles] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [journalists, setJournalists] = useState([]);
+  const [reports, setReports] = useState([]);
+  const [analytics, setAnalytics] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const recentArticles = [
-    { id: 1, title: 'نتائج قمة الاقتصاد العالمي في اتفاقيات تجارية جديدة', author: 'جين سميث', status: 'منشور', date: '2025-03-13', views: 4328 },
-    { id: 2, title: 'عملاق التكنولوجيا يعلن عن منتج ذكاء اصطناعي ثوري', author: 'جون دو', status: 'قيد الانتظار', date: '2025-03-13', views: 0 },
-    { id: 3, title: 'مؤتمر تغير المناخ: النقاط الرئيسية', author: 'أليكس جونسون', status: 'منشور', date: '2025-03-12', views: 2156 },
-    { id: 4, title: 'فريق رياضي يفوز بالبطولة بعد جفاف عقد من الزمن', author: 'مايكل براون', status: 'منشور', date: '2025-03-12', views: 5891 },
-  ];
+  const API_BASE_URL = "http://localhost:8000/admin";
 
-  const pendingJournalists = [
-    { id: 1, name: 'روبرت تشين', email: 'robert.chen@example.com', specialty: 'تكنولوجيا', application: '2025-03-10' },
-    { id: 2, name: 'سارة ويليامز', email: 'sarah.w@example.com', specialty: 'سياسة', application: '2025-03-11' },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const [articlesRes, commentsRes, journalistsRes, reportsRes, analyticsRes] = await Promise.all([
+          axios.get(`${API_BASE_URL}/articles`),
+          axios.get(`${API_BASE_URL}/comments`),
+          axios.get(`${API_BASE_URL}/users`),
+          axios.get(`${API_BASE_URL}/reports`),
+          axios.get(`${API_BASE_URL}/analytics`),
+        ]);
 
-  const reportedComments = [
-    { id: 1, user: 'user123', comment: 'هذا المقال متحيز تمامًا ويحتوي على معلومات مضللة.', article: 'مؤتمر تغير المناخ', reports: 5, reason: 'معلومات مضللة' },
-    { id: 2, user: 'news_reader', comment: 'يجب أن تستحي من نشر هذا القمامة!', article: 'قمة الاقتصاد العالمي', reports: 3, reason: 'مضايقة' },
-  ];
+        // تحويل publishDate إلى date وجلب اسم المؤلف
+        const formattedArticles = articlesRes.data.map(article => ({
+          ...article,
+          date: article.publishDate ? new Date(article.publishDate).toLocaleDateString('ar-EG') : 'غير محدد',
+          author: article.author.username || 'غير معروف', // افتراض أن الـ API يعيد اسم المؤلف عبر populate
+          status: article.status === 'published' ? 'منشور' : article.status === 'pending' ? 'قيد الانتظار' : 'مرفوض'
+        }));
 
-  const analyticsData = {
-    totalViews: '127,584',
-    avgTimeOnSite: '4د 32ث',
-    topCategories: ['سياسة', 'تكنولوجيا', 'رياضة'],
-    userDemographics: { age: { '18-24': 15, '25-34': 32, '35-44': 28, '45-54': 18, '55+': 7 }, location: { 'أمريكا الشمالية': 45, أوروبا: 30, آسيا: 15, أخرى: 10 } },
+        setArticles(formattedArticles);
+        setComments(commentsRes.data);
+        setJournalists(journalistsRes.data.filter(user => user.role === "journalist"));
+        setReports(reportsRes.data);
+        setAnalytics(analyticsRes.data);
+      } catch (err) {
+        setError("فشل في جلب البيانات من الخادم. يرجى المحاولة لاحقًا.");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const adminProfile = {
+    name: "محمد علي",
+    email: "mohamed.admin@example.com",
+    role: "مدير لوحة التحكم",
+    language: "العربية",
+    timezone: "GMT+2 (القاهرة)",
+    twoFactorEnabled: true,
+    notificationsEnabled: true,
+    avatar: "https://example.com/admin-avatar.jpg",
+    joinDate: "01 يناير 2023",
+    lastLogin: "14 مارس 2025، 09:00"
   };
 
-  const trendingArticles = [
-    { id: 1, title: 'فريق رياضي يفوز بالبطولة بعد جفاف عقد من الزمن', views: 5891, comments: 342, featured: true },
-    { id: 2, title: 'نتائج قمة الاقتصاد العالمي في اتفاقيات تجارية جديدة', views: 4328, comments: 167, featured: false },
-    { id: 3, title: 'دراسة صحية جديدة تكشف عن فوائد مذهلة للقهوة', views: 3945, comments: 208, featured: false },
-    { id: 4, title: 'المجتمع المحلي يعيد البناء بعد الكارثة الطبيعية', views: 3574, comments: 285, featured: true },
-  ];
-
   const navItems = [
-    { id: 'overview', label: 'نظرة عامة على اللوحة', icon: <Home size={20} /> },
-    { id: 'content', label: 'إدارة المحتوى', icon: <FileText size={20} /> },
-    { id: 'journalists', label: 'حسابات الصحفيين', icon: <Edit size={20} /> },
-    { id: 'users', label: 'إدارة المستخدمين', icon: <Users size={20} /> },
-    { id: 'comments', label: 'مراقبة التعليقات', icon: <MessageSquare size={20} /> },
-    { id: 'reports', label: 'التقارير والعلم', icon: <Flag size={20} /> },
-    { id: 'analytics', label: 'تحليلات الموقع', icon: <BarChart2 size={20} /> },
-    { id: 'trending', label: 'المحتوى الرائج', icon: <TrendingUp size={20} /> },
-    { id: 'settings', label: 'الإعدادات', icon: <Settings size={20} /> },
+    { id: "overview", label: "نظرة عامة على اللوحة", icon: <Home size={20} /> },
+    { id: "content", label: "إدارة المحتوى", icon: <FileText size={20} /> },
+    { id: "journalists", label: "حسابات الصحفيين", icon: <Edit size={20} /> },
+    { id: "users", label: "إدارة المستخدمين", icon: <Users size={20} /> },
+    { id: "comments", label: "مراقبة التعليقات", icon: <MessageSquare size={20} /> },
+    { id: "reports", label: "التقارير والعلم", icon: <Flag size={20} /> },
+    { id: "analytics", label: "تحليلات الموقع", icon: <BarChart2 size={20} /> },
+    { id: "trending", label: "المحتوى الرائج", icon: <TrendingUp size={20} /> },
+    { id: "settings", label: "الإعدادات", icon: <Settings size={20} /> },
+    {
+      id: "logout",
+      label: "تسجيل الخروج",
+      icon: <LogOut size={20} />,
+      onClick: () => {
+        alert("تم تسجيل الخروج بنجاح!");
+      },
+    },
   ];
 
   const renderContent = () => {
+    if (loading) {
+      return <div className="text-center p-6">جارٍ التحميل...</div>;
+    }
+    if (error) {
+      return <div className="text-center p-6 text-red-600">{error}</div>;
+    }
+
     switch (activeTab) {
-      case 'overview':
+      case "overview":
         return <OverviewSection />;
-      case 'content':
-        return <ContentSection articles={recentArticles} />;
-      case 'journalists':
-        return <JournalistsSection journalists={pendingJournalists} />;
-      case 'comments':
-        return <CommentsSection comments={reportedComments} />;
-      case 'analytics':
-        return <AnalyticsSection analytics={analyticsData} />;
-      case 'trending':
-        return <TrendingSection articles={trendingArticles} />;
+      case "content":
+        return <ContentSection articles={articles} />;
+      case "journalists":
+        return <JournalistsSection journalists={journalists} />;
+      case "comments":
+        return <CommentsSection comments={comments} />;
+      case "analytics":
+        return <AnalyticsSection analytics={analytics} />;
+      case "trending":
+        return <TrendingSection articles={articles} />;
+      case "settings":
+        return <SettingsSection userProfile={adminProfile} />;
       default:
         return null;
     }
@@ -84,7 +133,11 @@ const Admin = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100" dir="rtl">
-      <Sidebar navItems={navItems} activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Sidebar
+        navItems={navItems}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+      />
       <div className="flex-1 p-6">
         <Header activeTab={activeTab} navItems={navItems} />
         {renderContent()}
