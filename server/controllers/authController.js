@@ -10,18 +10,14 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 const signupSchema = Joi.object({
   full_name: Joi.string()
-    .regex(/^\S+\s+\S+\s+\S+\s+\S+$/) // يجب أن يحتوي الاسم على 4 مقاطع على الأقل
+    .regex(/^\S+\s+\S+\s+\S+\s+\S+$/) // Must contain at least 4 words
     .message("Full name must have at least 4 words")
     .required(),
-
   email: Joi.string().email().required(),
-
   password: Joi.string()
     .min(8)
     .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
-    .message(
-      "Password must contain at least one uppercase letter, one lowercase letter, and one number"
-    )
+    .message("Password must contain at least one uppercase letter, one lowercase letter, and one number")
     .required(),
 });
 
@@ -30,7 +26,7 @@ const signinSchema = Joi.object({
   password: Joi.string().required(),
 });
 
-// ✅ تسجيل مستخدم جديد (Sign Up)
+// ✅ SIGN UP (Register a New User)
 exports.signup = async (req, res) => {
   try {
     const { error } = signupSchema.validate(req.body);
@@ -55,7 +51,7 @@ exports.signup = async (req, res) => {
     });
 
     const token = jwt.sign(
-      { userId: newUser._id, email: newUser.email },
+      { _id: newUser._id, email: newUser.email, role: newUser.role }, // ✅ Include role in token
       JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -73,16 +69,15 @@ exports.signup = async (req, res) => {
         id: newUser._id,
         full_name: newUser.full_name,
         email: newUser.email,
+        role: newUser.role, // ✅ Return role in response
       },
     });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Signup failed", error: error.message });
+    return res.status(500).json({ message: "Signup failed", error: error.message });
   }
 };
 
-// ✅ تسجيل الدخول (Sign In)
+// ✅ SIGN IN (Login User)
 exports.signin = async (req, res) => {
   try {
     const { error } = signinSchema.validate(req.body);
@@ -92,6 +87,7 @@ exports.signin = async (req, res) => {
 
     const { email, password } = req.body;
     const user = await User.findOne({ email });
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -102,7 +98,7 @@ exports.signin = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { userId: user._id, email: user.email },
+      { _id: user._id, email: user.email, role: user.role }, // ✅ Include role in token
       JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -115,15 +111,20 @@ exports.signin = async (req, res) => {
     return res.status(200).json({
       message: "Login successful",
       token,
+      user: {
+        id: user._id,
+        full_name: user.full_name,
+        email: user.email,
+        role: user.role, // ✅ Return role in response
+      },
     });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Login failed", error: error.message });
+    return res.status(500).json({ message: "Login failed", error: error.message });
   }
 };
 
+// ✅ LOGOUT (Clear Token)
 exports.logoutUser = (req, res) => {
-  res.clearCookie("authtoken");
+  res.clearCookie("authToken");
   return res.status(200).json({ message: "Logged out successfully" });
 };
