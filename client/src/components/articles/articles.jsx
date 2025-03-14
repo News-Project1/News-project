@@ -49,7 +49,7 @@ const Articles = () => {
               <div key={article._id} className="bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 p-4">
                 <h2 className="text-2xl font-semibold text-blue-gray mb-2">{article.title}</h2>
                 <p className="text-gray-600">الفئة: {article.categoryIds[0]?.name}</p>
-                <p className="text-gray-600">المؤلف: {article.author.username}</p>
+                <p className="text-gray-600">المؤلف: {article.author.full_name}</p>
                 <a href={`/article/${article._id}`} className="text-blue-500 hover:underline mt-2 block">اقرأ المزيد</a>
               </div>
             ))
