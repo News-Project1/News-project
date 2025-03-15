@@ -7,5 +7,5 @@ require('./Article');
 require('./Video');
 require('./Comment');
 require('./Report');
-
+require('./Video');
 module.exports = mongoose;
