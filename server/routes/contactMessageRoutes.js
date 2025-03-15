@@ -7,6 +7,6 @@ const {
 
 router.post("/contact", createMessage);
 
-router.get("/contact/getmessages", getMessages);
+router.get("/getmessages", getMessages);
 
 module.exports = router;
