@@ -13,8 +13,19 @@
 const express = require('express');
 const router = express.Router();
 const paymentController = require('../controllers/paymentController');
+// const PaymentAuthMiddleware = require('../middleware/PaymentAuthMiddleware'); // استدعاء الميدل وير للحماية
 
-// route بدون حماية
+// حماية مسار الدفع عبر ميدل وير التحقق من التوكن
 router.post('/payment', paymentController.processPayment);
 
 module.exports = router;
+
+
+// const express = require('express');
+// const router = express.Router();
+// const paymentController = require('../controllers/paymentController');
+
+// // route بدون حماية
+// router.post('/payment', paymentController.processPayment);
+
+// module.exports = router;

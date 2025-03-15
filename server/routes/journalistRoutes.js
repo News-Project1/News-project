@@ -1,19 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const { isAuthenticated, isJournalist } = require("../middleware/authMiddleware");
+const { isAuthenticated, isJournalist } = require("../middleware/journalistMiddleware");
 const journalistController = require("../controllers/journalistController");
 
-// ✅ Get all articles by the logged-in journalist
+// ✅ Get all articles by the journalist (excluding deleted ones)
 router.get("/articles", isAuthenticated, isJournalist, journalistController.getArticles);
 
 // ✅ Create a new article
 router.post("/articles", isAuthenticated, isJournalist, journalistController.createArticle);
 
-// ✅ Edit an existing article
+// ✅ Edit an article (only before approval)
 router.put("/articles/:id", isAuthenticated, isJournalist, journalistController.updateArticle);
 
-// ✅ Delete an article
-router.delete("/articles/:id", isAuthenticated, isJournalist, journalistController.deleteArticle);
+// ✅ Soft delete an article
+router.put("/articles/:id/delete", isAuthenticated, isJournalist, journalistController.softDeleteArticle);
 
 // ✅ Get article analytics (views, likes)
 router.get("/analytics", isAuthenticated, isJournalist, journalistController.getAnalytics);
