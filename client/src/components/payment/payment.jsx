@@ -1,6 +1,106 @@
-import React from 'react'
+import React, { useState } from 'react';
+import axios from 'axios';
 
-function Payment() {
+
+const PaymentPage = () => {
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardHolder, setCardHolder] = useState('');
+  const [expiryDate, setExpiryDate] = useState('');
+  const [cvv, setCvv] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsProcessing(true);
+    // if (!cardNumber || !/^\d{4} \d{4} \d{4} \d{4}$/.test(cardNumber)) {
+    //   alert("يرجى إدخال رقم بطاقة صالح.");
+    //   setIsProcessing(false);
+    //   return;
+    // }
+  
+    // if (!expiryDate || !/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryDate)) {
+    //   alert("يرجى إدخال تاريخ انتهاء صالح (MM/YY).");
+    //   setIsProcessing(false);
+    //   return;
+    // }
+  
+    // if (!cvv || !/^\d{3}$/.test(cvv)) {
+    //   alert("يرجى إدخال رمز الأمان (CVV) صالح.");
+    //   setIsProcessing(false);
+    //   return;
+    // }
+
+    // const token = localStorage.getItem('token'); // استرجاع التوكن من المتصفح
+
+    try {
+      // إرسال البيانات إلى الخادم
+      const response = await axios.post('http://localhost:8000/api/payment', {
+      // const response = await axios.post('/api/payment', {
+        cardNumber,
+        cardHolder,
+        expiryDate,
+        cvv,
+      }, {
+        // headers: {
+        //   Authorization: `Bearer ${token}`, // إرسال التوكن مع الطلب
+        // },
+      });
+
+      if (response.data.success) {
+        setIsSuccess(true);
+      }
+    } catch (error) {
+      console.error("Error during payment:", error);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+  
+
+  const formatCardNumber = (value) => {
+    const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+    const matches = v.match(/\d{4,16}/g);
+    const match = matches && matches[0] || '';
+    const parts = [];
+
+    for (let i = 0; i < match.length; i += 4) {
+      parts.push(match.substring(i, i + 4));
+    }
+
+    if (parts.length) {
+      return parts.join(' ');
+    } else {
+      return value;
+    }
+  };
+
+  
+
+  if (isSuccess) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md text-center">
+          <div className="mb-4 flex justify-center">
+            <div className="h-16 w-16 bg-green-500 rounded-full flex items-center justify-center">
+              <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">تمت عملية الدفع بنجاح!</h2>
+          <p className="text-gray-600 mb-6">شكراً لك، تم إتمام عملية الدفع بنجاح.</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="bg-blue-600 text-white py-2 px-4 rounded-md w-full hover:bg-blue-700"
+          >
+            العودة
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     // <div>payment</div>
     <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
@@ -240,4 +340,4 @@ function Payment() {
   )
 }
 
-export default Payment
+export default PaymentPage;

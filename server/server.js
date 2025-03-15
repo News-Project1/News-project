@@ -8,6 +8,12 @@ const articleRoutes = require("./routes/articleRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const connectDB = require("./config/db");
 
+
+
+const paymentRoutes = require('./routes/PaymentRoutes');////////////////
+
+
+
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
@@ -20,6 +26,8 @@ app.use(
   })
 );
 connectDB();
+
+app.use('/api', paymentRoutes); // ربط الـ API بـ paymentRoutes///////////////
 
 app.use('/auth', authRoutes);
 app.use("/api/articles", articleRoutes);
