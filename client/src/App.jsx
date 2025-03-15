@@ -14,13 +14,20 @@ import ArticleCreation from "./components/articleCreation/articleCreation";
 import Admin from "./components/adminDash/admin";
 import Navbar from "./components/navbar/navbar";
 import Payment from "./components/payment/payment";
-import DigiboostLandingPage from "./components/DigiboostLandingPage/DigiboostLandingPage"
-
+import DigiboostLandingPage from "./components/DigiboostLandingPage/DigiboostLandingPage";
+import HeroSection from "./components/HeroSection/HeroSection";
+import Newscard from "./components/NewsCard/NewsCard";
+import GamesSection from "./components/GamesSection/GamesSection";
+import SudokuGame from "./components/SudokuGame/SudokuGame";
+import CutWordGame from "./components/CutWordGame/CutWordGame";
+import MainFeature from './components/MainFeature/MainFeature';
+import Sidebar from './components/sidebar/saidbar';
+import CartoonSection from './components/CartoonSection/CartoonSection';
 function App() {
   return (
     <Router>
 
-        {/* <Navbar/> */}
+        <Navbar/>
       <Routes>
 
         <Route path="/" element={<Home />} />
@@ -36,7 +43,11 @@ function App() {
         <Route path="/bookmarks" element={<Bookmark />} />
         <Route path="/create-article" element={<ArticleCreation />} />
         <Route path="/DigiboostLandingPage" element={<DigiboostLandingPage />} />
-
+        <Route path="/HeroSection" element={<HeroSection />} />
+        <Route path="/Newscard" element={<Newscard/>} />
+        <Route path="/GamesSection" element={<GamesSection />} />
+        <Route path="/sudoku" element={<SudokuGame />} />
+        <Route path="/cutwordgame" element={<CutWordGame />} />
         <Route path="/admin" element={<Admin />} />
 
       </Routes>

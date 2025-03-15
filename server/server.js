@@ -4,10 +4,12 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
+// const journalistRoutes = require("./routes/journalistRoutes");
+const articleRoutes = require("./routes/articleRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 const connectDB = require("./config/db");
 //heba
 const newsRoutes = require("./routes/newsRoutes");
-
 
 const app = express();
 app.use(express.json());
@@ -22,8 +24,11 @@ app.use(
 );
 connectDB();
 
+app.use('/auth', authRoutes);
+app.use("/api/articles", articleRoutes);
+app.use("/api/categories", categoryRoutes);
+// app.use("/api/journalist", journalistRoutes);
 
-// app.use('/auth', authRoutes);
 
 //heba 
 app.use("/breaking-news", newsRoutes);
@@ -31,3 +36,4 @@ app.use("/breaking-news", newsRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+ 
