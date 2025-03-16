@@ -1,8 +1,8 @@
-const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const dotenv = require("dotenv");
+const Joi = require("joi");
 
 dotenv.config();
 
@@ -10,12 +10,10 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 const signupSchema = Joi.object({
   full_name: Joi.string()
-    .regex(/^\S+\s+\S+\s+\S+\s+\S+$/) // يجب أن يحتوي الاسم على 4 مقاطع على الأقل
+    .regex(/^\S+\s+\S+\s+\S+\s+\S+$/) // Must contain at least 4 words
     .message("Full name must have at least 4 words")
     .required(),
-
   email: Joi.string().email().required(),
-
   password: Joi.string()
     .min(8)
     .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
@@ -25,12 +23,6 @@ const signupSchema = Joi.object({
     .required(),
 });
 
-const signinSchema = Joi.object({
-  email: Joi.string().email().required(),
-  password: Joi.string().required(),
-});
-
-// ✅ تسجيل مستخدم جديد (Sign Up)
 exports.signup = async (req, res) => {
   try {
     const { error } = signupSchema.validate(req.body);
@@ -55,7 +47,7 @@ exports.signup = async (req, res) => {
     });
 
     const token = jwt.sign(
-      { userId: newUser._id, email: newUser.email },
+      { _id: newUser._id, email: newUser.email, role: newUser.role },
       JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -73,6 +65,7 @@ exports.signup = async (req, res) => {
         id: newUser._id,
         full_name: newUser.full_name,
         email: newUser.email,
+        role: newUser.role,
       },
     });
   } catch (error) {
@@ -82,48 +75,23 @@ exports.signup = async (req, res) => {
   }
 };
 
-// ✅ تسجيل الدخول (Sign In)
-exports.signin = async (req, res) => {
-  try {
-    const { error } = signinSchema.validate(req.body);
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
+// exports.googleAuth = async (req, res) => {
+//   try {
+//     const user = req.user;
+//     const token = jwt.sign({ _id: user._id, email: user.email }, JWT_SECRET, {
+//       expiresIn: "1h",
+//     });
 
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+//     res.cookie("authToken", token, {
+//       httpOnly: true,
+//       secure: process.env.NODE_ENV === "production",
+//       maxAge: 3600000,
+//     });
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
-    }
-
-    const token = jwt.sign(
-      { userId: user._id, email: user.email },
-      JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-
-    res.cookie("authToken", token, {
-      httpOnly: true,
-      maxAge: 3600000,
-    });
-
-    return res.status(200).json({
-      message: "Login successful",
-      token,
-    });
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Login failed", error: error.message });
-  }
-};
-
-exports.logoutUser = (req, res) => {
-  res.clearCookie("authtoken");
-  return res.status(200).json({ message: "Logged out successfully" });
-};
+//     res.redirect(process.env.CLIENT_URL || "http://localhost:3000");
+//   } catch (error) {
+//     res
+//       .status(500)
+//       .json({ message: "Google authentication failed", error: error.message });
+//   }
+// };

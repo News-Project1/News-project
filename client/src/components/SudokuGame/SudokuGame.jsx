@@ -1,5 +1,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
+import NewsTicker from "../NewsTicker/NewsTicker";
+
 import sudoku from "sudoku";
 
 const SudokuGame = ({ onBack }) => {
@@ -95,7 +97,11 @@ const SudokuGame = ({ onBack }) => {
   };
 
   return (
+    <>
+    <NewsTicker />
+
     <div className="p-6 bg-gray-200 rounded-lg shadow-lg max-w-4xl mx-auto text-center">
+      
       <h2 className="text-3xl font-bold text-gray-800 mb-4">🧩 لعبة سودوكو</h2>
 
       <p className="text-lg font-semibold text-gray-700 mb-2">
@@ -164,6 +170,7 @@ const SudokuGame = ({ onBack }) => {
         </button>
       </div>
     </div>
+    </>
   );
 };
 

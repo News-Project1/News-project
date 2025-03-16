@@ -61,7 +61,7 @@ const GamesSection = () => {
   const navigate = useNavigate(); // لاستخدام التنقل بين الصفحات
 
   return (
-    <section className="bg-gray-100 py-10">
+    <section className="bg-[] py-10">
       <div className="max-w-6xl mx-auto px-6">
         <h2 className="text-2xl font-bold mb-6 text-right">ألعاب</h2>
         <div className="grid md:grid-cols-2 gap-6">

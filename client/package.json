@@ -10,14 +10,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "axios": "^1.8.3",
+    "axios": "^1.8.2",
+    "framer-motion": "^12.5.0",
     "js-cookie": "^3.0.5",
+    "lucide-react": "^0.482.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-fast-marquee": "^1.6.5",
+    "react-icons": "^5.5.0",
     "react-router-dom": "^7.3.0",
+    "react-toastify": "^11.0.5",
+    "recharts": "^2.15.1",
     "sudoku": "^0.0.3",
-    "sudoku-gen": "^1.0.2"
+    "sudoku-gen": "^1.0.2",
+    "tailwindcss-rtl": "^0.9.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

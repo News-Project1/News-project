@@ -10,7 +10,6 @@ import Login from "./components/login/login";
 import Register from "./components/register/register";
 import UserProfile from "./components/userProfile/userProfile";
 import Bookmark from "./components/bookmark/bookmark";
-import ArticleCreation from "./components/articleCreation/articleCreation";
 import Admin from "./components/adminDash/admin";
 import Navbar from "./components/navbar/navbar";
 import Payment from "./components/payment/payment";
@@ -23,6 +22,8 @@ import CutWordGame from "./components/CutWordGame/CutWordGame";
 import MainFeature from './components/MainFeature/MainFeature';
 import Sidebar from './components/sidebar/saidbar';
 import CartoonSection from './components/CartoonSection/CartoonSection';
+import Dashboard from "./components/JournlistDash/Dashboard";
+
 function App() {
   return (
     <Router>
@@ -41,13 +42,13 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/bookmarks" element={<Bookmark />} />
-        <Route path="/create-article" element={<ArticleCreation />} />
         <Route path="/DigiboostLandingPage" element={<DigiboostLandingPage />} />
         <Route path="/HeroSection" element={<HeroSection />} />
         <Route path="/Newscard" element={<Newscard/>} />
         <Route path="/GamesSection" element={<GamesSection />} />
         <Route path="/sudoku" element={<SudokuGame />} />
         <Route path="/cutwordgame" element={<CutWordGame />} />
+        <Route path="/journalist/*" element={<Dashboard />} />
         <Route path="/admin" element={<Admin />} />
 
       </Routes>

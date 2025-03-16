@@ -1,4 +1,4 @@
-const News = require("../models/newsModel");
+const News = require("../models/Article");
 
 // ✅ جلب الأخبار العاجلة
 const getBreakingNews = async (req, res) => {
@@ -10,15 +10,4 @@ const getBreakingNews = async (req, res) => {
   }
 };
 
-// ✅ إضافة خبر جديد
-const addNews = async (req, res) => {
-  try {
-    const newNews = new News({ title: req.body.title });
-    await newNews.save();
-    res.status(201).json(newNews);
-  } catch (error) {
-    res.status(500).json({ message: "خطأ في إضافة الخبر" });
-  }
-};
-
-module.exports = { getBreakingNews, addNews };
+module.exports = { getBreakingNews };
