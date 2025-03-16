@@ -99,12 +99,21 @@ exports.isAuthenticated = (req, res, next) => {
 };
 
 
-exports.isUser = (req, res, next) => {
-  console.log("Checking Role:", req.user.role); // ✅ Log the role
 
-  if (!req.user || req.user.role !== "reader") {
-    return res.status(403).json({ message: "Access denied. reader only." });
-  }
-  next();
-};
+
+exports.isUser = (req, res, next) => {
+    if (!req.user || req.user.role !== "reader") {
+      return res.status(403).json({ message: "Access denied. reader only." });
+    }
+    next();
+  };
+
+// exports.isUser = (req, res, next) => {
+//   console.log("Checking Role:", req.user.role); // ✅ Log the role
+
+//   if (!req.user || req.user.role !== "reader") {
+//     return res.status(403).json({ message: "Access denied. reader only." });
+//   }
+//   next();
+// };
 

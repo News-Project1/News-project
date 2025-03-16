@@ -9,24 +9,20 @@ const PaymentPage = () => {
   const [cvv, setCvv] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errors, setErrors] = useState({});
 
 
-  const [token, setToken] = useState('');
-  useEffect(() => {
-    const getToken = () => {
-      const cookies = cookie.split('; ');
-      const tokenCookie = cookies.find(row => row.startsWith('token='));
-      if (tokenCookie) {
-        setToken(tokenCookie.split('=')[1]);
-      }
-    };
-    getToken();
-  }, []);
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsProcessing(true);
+
+    if (!validateInputs()) {
+      setIsProcessing(false);
+      return;
+    }
+    
     
     try {
       // إرسال البيانات إلى الخادم
@@ -56,6 +52,31 @@ const PaymentPage = () => {
       setIsProcessing(false);
     }
   };
+
+
+  const validateInputs = () => {
+    let validationErrors = {};
+  
+    if (!cardHolder.trim()) {
+      validationErrors.cardHolder = "يرجى إدخال اسم حامل البطاقة.";
+    }
+  
+    if (!cardNumber || !/^\d{4} \d{4} \d{4} \d{4}$/.test(cardNumber)) {
+      validationErrors.cardNumber = "يرجى إدخال رقم بطاقة صالح (مثال: 1234 5678 9012 3456).";
+    }
+  
+    if (!expiryDate || !/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryDate)) {
+      validationErrors.expiryDate = "يرجى إدخال تاريخ انتهاء صالح (MM/YY).";
+    }
+  
+    if (!cvv || !/^\d{3}$/.test(cvv)) {
+      validationErrors.cvv = "يرجى إدخال رمز أمان (CVV) صالح.";
+    }
+  
+    setErrors(validationErrors);
+    return Object.keys(validationErrors).length === 0; // إرجاع `true` إذا لم تكن هناك أخطاء
+  };
+  
   
 
   const formatCardNumber = (value) => {
@@ -120,6 +141,7 @@ const PaymentPage = () => {
               onChange={(e) => setCardHolder(e.target.value)}
               required
               />
+              {errors.cardHolder && <p className="text-red-500 text-sm mt-1">{errors.cardHolder}</p>}
           </div>
           
           <div className="mb-4">
@@ -136,6 +158,7 @@ const PaymentPage = () => {
               maxLength={19}
               required
               />
+              {errors.cardNumber && <p className="text-red-500 text-sm mt-1">{errors.cardNumber}</p>}
           </div>
           
           <div className="flex mb-4 gap-4">
@@ -153,6 +176,7 @@ const PaymentPage = () => {
                 maxLength={5}
                 required
                 />
+                {errors.expiryDate && <p className="text-red-500 text-sm mt-1">{errors.expiryDate}</p>}
             </div>
             <div className="w-1/2">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cvv">
@@ -168,6 +192,7 @@ const PaymentPage = () => {
                 maxLength={3}
                 required
                 />
+                {errors.cvv && <p className="text-red-500 text-sm mt-1">{errors.cvv}</p>}
             </div>
           </div>
           
@@ -216,6 +241,9 @@ const PaymentPage = () => {
 };
 
 export default PaymentPage;
+
+
+
 // if (!cardNumber || !/^\d{4} \d{4} \d{4} \d{4}$/.test(cardNumber)) {
 //   alert("يرجى إدخال رقم بطاقة صالح.");
 //   setIsProcessing(false);
@@ -233,5 +261,3 @@ export default PaymentPage;
 //   setIsProcessing(false);
 //   return;
 // }
-
-// const token = localStorage.getItem('token'); // استرجاع التوكن من المتصفح

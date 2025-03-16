@@ -27,33 +27,3 @@ const PaymentSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Payment', PaymentSchema);
-
-
-
-
-
-// // models/Payment.js
-// const mongoose = require('mongoose');
-
-// const PaymentSchema = new mongoose.Schema({
-//   cardNumber: {
-//     type: String,
-//     required: true,
-//   },
-//   cardHolder: {
-//     type: String,
-//     required: true,
-//   },
-//   expiryDate: {
-//     type: String,
-//     required: true,
-//   },
-//   cvv: {
-//     type: String,
-//     required: true,
-//   },
-// }, {
-//   timestamps: true,
-// });
-
-// module.exports = mongoose.model('Payment', PaymentSchema);
