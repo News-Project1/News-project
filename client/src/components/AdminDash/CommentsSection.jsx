@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const CommentsSection = () => {
   const [comments, setComments] = useState([]);
@@ -8,6 +9,7 @@ const CommentsSection = () => {
 
   const API_BASE_URL = "http://localhost:8000/admin";
 
+  // جلب التعليقات من الخادم
   const fetchComments = async () => {
     setLoading(true);
     try {
@@ -15,17 +17,27 @@ const CommentsSection = () => {
       const formattedComments = response.data.map((comment) => ({
         ...comment,
         id: comment._id,
-        author: comment.author && typeof comment.author === "object"
-          ? comment.author.full_name || comment.author.username || "غير معروف"
-          : "غير معروف",
-        articleTitle: comment.article && typeof comment.article === "object"
-          ? comment.article.title || "غير محدد"
-          : "غير مرتبط بمقال",
-        videoTitle: comment.video && typeof comment.video === "object"
-          ? comment.video.title || "غير محدد"
-          : "غير مرتبط بفيديو",
-        status: comment.status === "visible" ? "مرئي" : comment.status === "hidden" ? "مخفي" : "مُبلغ عنه",
-        date: comment.createdAt ? new Date(comment.createdAt).toLocaleDateString("ar-EG") : "غير محدد",
+        author:
+          comment.author && typeof comment.author === "object"
+            ? comment.author.full_name || comment.author.username || "غير معروف"
+            : "غير معروف",
+        articleTitle:
+          comment.article && typeof comment.article === "object"
+            ? comment.article.title || "غير محدد"
+            : "غير مرتبط بمقال",
+        videoTitle:
+          comment.video && typeof comment.video === "object"
+            ? comment.video.title || "غير محدد"
+            : "غير مرتبط بفيديو",
+        status:
+          comment.status === "visible"
+            ? "مرئي"
+            : comment.status === "hidden"
+            ? "مخفي"
+            : "مُبلغ عنه",
+        date: comment.createdAt
+          ? new Date(comment.createdAt).toLocaleDateString("ar-EG")
+          : "غير محدد",
       }));
       setComments(formattedComments);
     } catch (err) {
@@ -36,9 +48,32 @@ const CommentsSection = () => {
     }
   };
 
+  // تحديث حالة التعليق
+  const handleStatusChange = async (commentId, newStatus) => {
+    try {
+      const response = await axios.put(`${API_BASE_URL}/comments/${commentId}/status`, {
+        status: newStatus === "مرئي" ? "visible" : newStatus === "مخفي" ? "hidden" : "reported",
+      });
+      setComments((prevComments) =>
+        prevComments.map((comment) =>
+          comment.id === commentId
+            ? { ...comment, status: newStatus }
+            : comment
+        )
+      );
+      toast.success("تم تحديث حالة التعليق بنجاح!");
+    } catch (error) {
+      toast.error(
+        "فشل في تحديث حالة التعليق: " +
+          (error.response?.data?.error || error.message)
+      );
+      console.error("Update Status Error:", error.response || error);
+    }
+  };
+
   useEffect(() => {
     fetchComments();
-  }, []); 
+  }, []);
 
   if (loading) {
     return <div className="text-center p-6">جارٍ التحميل...</div>;
@@ -73,11 +108,21 @@ const CommentsSection = () => {
                   <td className="p-3">{comment.content.substring(0, 50)}...</td>
                   <td className="p-3">{comment.author}</td>
                   <td className="p-3">
-                    {comment.articleTitle !== "غير مرتبط بمقال" 
-                      ? comment.articleTitle 
+                    {comment.articleTitle !== "غير مرتبط بمقال"
+                      ? comment.articleTitle
                       : comment.videoTitle}
                   </td>
-                  <td className="p-3">{comment.status}</td>
+                  <td className="p-3">
+                    <select
+                      value={comment.status}
+                      onChange={(e) => handleStatusChange(comment.id, e.target.value)}
+                      className="border rounded px-2 py-1 text-sm"
+                    >
+                      <option value="مرئي">مرئي</option>
+                      <option value="مخفي">مخفي</option>
+                      <option value="مُبلغ عنه">مُبلغ عنه</option>
+                    </select>
+                  </td>
                   <td className="p-3">{comment.date}</td>
                 </tr>
               ))}
