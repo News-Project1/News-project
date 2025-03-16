@@ -5,45 +5,102 @@ const User = require('../models/User');
 const Video = require('../models/Video');
 const Category = require('../models/Category');
 
+
 // إدارة المقالات
 exports.getArticles = async (req, res) => {
-//   try {
-//     const articles = await Article.find().populate('author categoryIds');
-//     res.status(200).json(articles);
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-try {
-    const articles = await Article.find({ isDeleted: false })
-      .populate('author', 'username') // جلب اسم المؤلف
+  try {
+    const { page = 1, limit = 10, search = '' } = req.query;
+    
+    // تحويل page و limit إلى أعداد صحيحة
+    const pageNum = parseInt(page, 10);
+    const limitNum = parseInt(limit, 10);
+
+    // بناء الاستعلام
+    const query = {
+      isDeleted: false,
+    };
+    if (search) {
+      query.title = { $regex: new RegExp(search, 'i') }; // بحث غير حساس لحالة الأحرف
+    }
+
+    // جلب المقالات مع الترقيم
+    const articles = await Article.find(query)
+      .populate('author', 'username full_name')
+      .skip((pageNum - 1) * limitNum)
+      .limit(limitNum)
       .exec();
-    res.json(articles);
+
+    // حساب العدد الكلي للمقالات
+    const totalArticles = await Article.countDocuments(query);
+
+    res.json({
+      articles,
+      totalArticles,
+      currentPage: pageNum,
+      totalPages: Math.ceil(totalArticles / limitNum),
+    });
   } catch (err) {
-    res.status(500).json({ message: 'خطأ في جلب المقالات', error: err });
+    console.error('Error in getArticles:', err);
+    res.status(500).json({ message: 'خطأ في جلب المقالات', error: err.message });
   }
 };
 
 exports.updateArticleStatus = async (req, res) => {
-//   const { id } = req.params;
-//   const { status } = req.body;
-//   try {
-//     const article = await Article.findByIdAndUpdate(id, { status }, { new: true });
-//     if (!article) return res.status(404).json({ error: 'Article not found' });
-//     res.status(200).json(article);
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-try {
-    const { status } = req.body; // يتوقع { status: "published" }
-    const article = await Article.findByIdAndUpdate(
-      req.params.articleId,
+  console.log('Received ID:', req.params.id);
+  try {
+    const { status } = req.body;
+    const allowedStatuses = ['pending', 'published', 'rejected'];
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({ message: 'الحالة غير صالحة' });
+    }
+    const article = await Article.findOneAndUpdate(
+      { _id: req.params.id, isDeleted: false },
       { status },
       { new: true }
-    ).populate('author', 'username');
+    ).populate('author', 'username full_name');
     if (!article) return res.status(404).json({ message: 'المقال غير موجود' });
     res.json(article);
   } catch (err) {
     res.status(500).json({ message: 'خطأ في تحديث الحالة', error: err });
+  }
+};
+
+exports.updateArticle = async (req, res) => {
+  console.log('Received ID for update:', req.params.id);
+  try {
+    const { title, content, featuredImage, media, categoryIds, tags, publishDate } = req.body;
+    const article = await Article.findOneAndUpdate(
+      { _id: req.params.id, isDeleted: false },
+      {
+        title,
+        content,
+        featuredImage,
+        media,
+        categoryIds,
+        tags,
+        publishDate,
+      },
+      { new: true }
+    ).populate('author', 'username full_name');
+    if (!article) return res.status(404).json({ message: 'المقال غير موجود' });
+    res.json(article);
+  } catch (err) {
+    res.status(500).json({ message: 'خطأ في تعديل المقال', error: err });
+  }
+};
+
+exports.deleteArticle = async (req, res) => {
+  console.log('Received ID for delete:', req.params.id);
+  try {
+    const article = await Article.findOneAndUpdate(
+      { _id: req.params.id, isDeleted: false },
+      { isDeleted: true },
+      { new: true }
+    ).populate('author', 'username full_name');
+    if (!article) return res.status(404).json({ message: 'المقال غير موجود' });
+    res.json({ message: 'تم حذف المقال بنجاح', article });
+  } catch (err) {
+    res.status(500).json({ message: 'خطأ في حذف المقال', error: err });
   }
 };
 
@@ -209,17 +266,71 @@ exports.deleteCategory = async (req, res) => {
 };
 
 // عرض التحليلات
+// exports.getAnalytics = async (req, res) => {
+//   try {
+//     const articles = await Article.find();
+//     const users = await User.find();
+//     const videos = await Video.find();
+//     res.status(200).json({
+//       totalArticles: articles.length,
+//       totalUsers: users.length,
+//       totalVideos: videos.length,
+//     });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
+// exports.getAnalytics = async (req, res) => {
+//   try {
+//     const articles = await Article.countDocuments({ isDeleted: false });
+//     const users = await User.countDocuments({ isDeleted: false });
+//     const videos = await Video.countDocuments({ isDeleted: false });
+//     const journalists = await User.countDocuments({ role: 'journalist', isDeleted: false });
+//     const comments = await Comment.countDocuments();
+    
+//     res.status(200).json({
+//       totalArticles: articles,
+//       totalUsers: users,
+//       totalVideos: videos,
+//       totalJournalists: journalists,
+//       totalComments: comments,
+//     });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
 exports.getAnalytics = async (req, res) => {
   try {
     const articles = await Article.find();
     const users = await User.find();
     const videos = await Video.find();
+
     res.status(200).json({
       totalArticles: articles.length,
       totalUsers: users.length,
       totalVideos: videos.length,
+      totalViews: articles.reduce((sum, a) => sum + (a.views || 0), 0),
+      avgTimeOnSite: 180, // قيمة افتراضية بالثواني
+      topCategories: ['سياحة', 'سياسة', 'تكنولوجيا'],
+      userDemographics: {
+        age: { '18-24': 25, '25-34': 35, '35-44': 20, '45+': 20 },
+        location: { 'عمان': 40, 'الزرقاء': 25, 'اربد': 20, 'أخرى': 15 },
+      },
+      topArticles: articles
+        .sort((a, b) => (b.views || 0) - (a.views || 0))
+        .slice(0, 4)
+        .map(a => ({
+          title: a.title,
+          views: a.views || 0,
+          comments: 0, // تحتاج إلى منطق لجلب التعليقات
+          avgTime: '3:00', // قيمة افتراضية
+          category: 'غير محدد',
+        })),
     });
   } catch (error) {
+    console.error('Error in getAnalytics:', error);
     res.status(500).json({ error: error.message });
   }
 };

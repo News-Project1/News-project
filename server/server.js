@@ -3,7 +3,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
-// const journalistRoutes = require("./routes/journalistRoutes");
+const journalistRoutes = require("./routes/journalistRoutes");
 const articleRoutes = require("./routes/articleRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const adminRoutes = require('./routes/adminRoutes');
@@ -25,7 +25,7 @@ connectDB();
 app.use('/auth', authRoutes);
 app.use("/api/articles", articleRoutes);
 app.use("/api/categories", categoryRoutes);
-// app.use("/api/journalist", journalistRoutes);
+app.use("/api/journalist", journalistRoutes);
 app.use('/admin', adminRoutes);
 // routes/admin.js
 

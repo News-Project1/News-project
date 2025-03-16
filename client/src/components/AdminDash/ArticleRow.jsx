@@ -2,7 +2,7 @@
 import React from 'react';
 import ActionButtons from './ActionButtons';
 
-const ArticleRow = ({ article }) => {
+const ArticleRow = ({ article, onStatusUpdate, onArticleUpdate, onArticleDelete }) => {
   return (
     <tr className="border-b">
       <td className="p-3">{article.title}</td>
@@ -20,10 +20,17 @@ const ArticleRow = ({ article }) => {
           {article.status}
         </span>
       </td>
-      <td className="p-3">{article.date}</td>
-      <td className="p-3">{article.views.toLocaleString()}</td>
+      <td className="p-4">{article.date}</td>
+      <td className="p-6">{article.views.toLocaleString()}</td>
       <td className="p-3">
-        <ActionButtons status={article.status} articleId={article.id} />
+        <ActionButtons 
+          status={article.status} 
+          articleId={article.id || article._id}
+          article={article} // تمرير بيانات المقال للتعديل
+          onStatusUpdate={onStatusUpdate}
+          onArticleUpdate={onArticleUpdate}
+          onArticleDelete={onArticleDelete}
+        />
       </td>
     </tr>
   );

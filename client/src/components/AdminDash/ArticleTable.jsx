@@ -1,7 +1,8 @@
+// ArticleTable.js
 import React from 'react';
 import ArticleRow from './ArticleRow';
 
-const ArticleTable = ({ articles }) => {
+const ArticleTable = ({ articles, onStatusUpdate, onArticleUpdate, onArticleDelete }) => {
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
@@ -17,7 +18,13 @@ const ArticleTable = ({ articles }) => {
         </thead>
         <tbody>
           {articles.map((article) => (
-            <ArticleRow key={article.id} article={article} />
+            <ArticleRow 
+              key={article.id || article._id} 
+              article={article} 
+              onStatusUpdate={onStatusUpdate}
+              onArticleUpdate={onArticleUpdate}
+              onArticleDelete={onArticleDelete}
+            />
           ))}
         </tbody>
       </table>
