@@ -19,7 +19,12 @@ const authenticateUser = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log("Decoded Token:", decoded); // Log the decoded token
-    req.user = decoded;
+    // req.user = decoded;
+    const userId = decoded.id;
+
+    if (!userId) {
+      return res.status(400).json({ success: false, message: "User ID is missing" });
+    }
     next();
   } catch (error) {
     console.error("JWT Verification Error:", error.message);

@@ -47,8 +47,13 @@ const articleRoutes = require("./routes/articleRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const adminRoutes = require('./routes/adminRoutes');
 const connectDB = require("./config/db");
-
 const contactMessage = require("./routes/contactMessageRoutes");
+
+
+
+const paymentRoutes = require('./routes/PaymentRoutes');////////////////
+
+
 
 const path = require("path");
 
@@ -65,6 +70,8 @@ app.use(
   })
 );
 connectDB();
+
+app.use('/api', paymentRoutes); // ربط الـ API بـ paymentRoutes///////////////
 
 app.use("/auth", authRoutes);
 app.use("/api", contactMessage);
