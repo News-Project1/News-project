@@ -150,7 +150,7 @@ const Admin = () => {
 
   const handleSearch = (term) => {
     setSearchTerm(term);
-    fetchArticles(1, term); // إعادة جلب المقالات من الصفحة الأولى عند البحث
+    fetchArticles(1, term); 
   };
 
   const adminProfile = {

@@ -1,4 +1,3 @@
-// ArticleRow.js
 import React from 'react';
 import ActionButtons from './ActionButtons';
 

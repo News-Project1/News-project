@@ -7,7 +7,7 @@ const ReportsSection = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // جلب التقارير من الخادم
+  
   const fetchReports = async () => {
     setLoading(true);
     try {
@@ -21,7 +21,7 @@ const ReportsSection = () => {
     }
   };
 
-  // تحديث حالة التقرير
+  
   const handleStatusChange = async (reportId, newStatus) => {
     try {
       const response = await axios.put(`http://localhost:8000/admin/reports/${reportId}`, {
@@ -38,12 +38,12 @@ const ReportsSection = () => {
     }
   };
 
-  // جلب التقارير عند تحميل المكون
+  
   useEffect(() => {
     fetchReports();
   }, []);
 
-  // عرض حالة التحميل أو الخطأ
+  
   if (loading) {
     return <div className="text-center p-6">جارٍ التحميل...</div>;
   }

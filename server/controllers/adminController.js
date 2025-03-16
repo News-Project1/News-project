@@ -6,31 +6,31 @@ const Video = require('../models/Video');
 const Category = require('../models/Category');
 
 
-// إدارة المقالات
+
 exports.getArticles = async (req, res) => {
   try {
     const { page = 1, limit = 10, search = '' } = req.query;
     
-    // تحويل page و limit إلى أعداد صحيحة
+   
     const pageNum = parseInt(page, 10);
     const limitNum = parseInt(limit, 10);
 
-    // بناء الاستعلام
+    
     const query = {
       isDeleted: false,
     };
     if (search) {
-      query.title = { $regex: new RegExp(search, 'i') }; // بحث غير حساس لحالة الأحرف
+      query.title = { $regex: new RegExp(search, 'i') }; 
     }
 
-    // جلب المقالات مع الترقيم
+   
     const articles = await Article.find(query)
       .populate('author', 'username full_name')
       .skip((pageNum - 1) * limitNum)
       .limit(limitNum)
       .exec();
 
-    // حساب العدد الكلي للمقالات
+    
     const totalArticles = await Article.countDocuments(query);
 
     res.json({
@@ -89,6 +89,7 @@ exports.updateArticle = async (req, res) => {
   }
 };
 
+
 exports.deleteArticle = async (req, res) => {
   console.log('Received ID for delete:', req.params.id);
   try {
@@ -104,7 +105,7 @@ exports.deleteArticle = async (req, res) => {
   }
 };
 
-// إدارة التعليقات
+
 exports.getComments = async (req, res) => {
   try {
     const comments = await Comment.find().populate('author article video');
@@ -126,7 +127,7 @@ exports.updateCommentStatus = async (req, res) => {
   }
 };
 
-// معالجة التقارير
+
 exports.getReports = async (req, res) => {
   try {
     const reports = await Report.find().populate('article reportedBy');
@@ -148,7 +149,7 @@ exports.updateReportStatus = async (req, res) => {
   }
 };
 
-// إدارة المستخدمين
+
 exports.getUsers = async (req, res) => {
   try {
     const users = await User.find();
@@ -183,7 +184,7 @@ exports.toggleUserStatus = async (req, res) => {
   }
 };
 
-// إدارة الفيديوهات
+
 exports.getVideos = async (req, res) => {
   try {
     const videos = await Video.find().populate('categoryIds');
@@ -224,7 +225,7 @@ exports.deleteVideo = async (req, res) => {
   }
 };
 
-// إدارة التصنيفات
+
 exports.getCategories = async (req, res) => {
   try {
     const categories = await Category.find();
@@ -324,8 +325,8 @@ exports.getAnalytics = async (req, res) => {
         .map(a => ({
           title: a.title,
           views: a.views || 0,
-          comments: 0, // تحتاج إلى منطق لجلب التعليقات
-          avgTime: '3:00', // قيمة افتراضية
+          comments: 0, 
+          avgTime: '3:00', 
           category: 'غير محدد',
         })),
     });
@@ -334,3 +335,4 @@ exports.getAnalytics = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+

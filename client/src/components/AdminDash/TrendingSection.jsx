@@ -15,24 +15,24 @@ const TrendingSection = () => {
       const response = await axios.get(`${API_BASE_URL}/articles`, {
         params: {
           page: 1,
-          limit: 10, // يمكنك تعديل العدد حسب الحاجة
-          search: '', // يمكن إضافة حقل بحث لاحقًا إذا لزم الأمر
+          limit: 10, 
+          search: '', 
         },
       });
 
       const { articles: fetchedArticles } = response.data;
 
-      // تنسيق البيانات مع إضافة حقل featured افتراضي إذا لم يكن موجودًا
+      
       const formattedArticles = fetchedArticles.map(article => ({
         ...article,
         id: article._id,
         title: article.title,
-        views: article.views || 0, // قيمة افتراضية إذا لم تكن موجودة
-        comments: article.likes ? article.likes.length : 0, // افتراض أن التعليقات مرتبطة بعدد الإعجابات أو يمكن تعديلها
-        featured: article.featured || false, // افتراضي إذا لم يكن موجودًا في النموذج
+        views: article.views || 0, 
+        comments: article.likes ? article.likes.length : 0, 
+        featured: article.featured || false, 
       }));
 
-      // ترتيب المقالات حسب المشاهدات لجعلها "رائجة"
+     
       const trendingArticles = formattedArticles.sort((a, b) => b.views - a.views);
       setArticles(trendingArticles);
     } catch (err) {
@@ -45,7 +45,7 @@ const TrendingSection = () => {
 
   useEffect(() => {
     fetchTrendingArticles();
-  }, []); // جلب البيانات عند تحميل المكون
+  }, []); 
 
   const handleFeatureToggle = (articleId) => {
     setArticles(prevArticles =>
@@ -53,7 +53,6 @@ const TrendingSection = () => {
         article.id === articleId ? { ...article, featured: !article.featured } : article
       )
     );
-    // يمكنك إضافة طلب API هنا لتحديث حالة "مميز" في الخادم إذا لزم الأمر
   };
 
 

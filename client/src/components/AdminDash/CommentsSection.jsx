@@ -38,7 +38,7 @@ const CommentsSection = () => {
 
   useEffect(() => {
     fetchComments();
-  }, []); // جلب التعليقات عند تحميل المكون فقط
+  }, []); 
 
   if (loading) {
     return <div className="text-center p-6">جارٍ التحميل...</div>;

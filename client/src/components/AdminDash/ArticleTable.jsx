@@ -1,4 +1,3 @@
-// ArticleTable.js
 import React from 'react';
 import ArticleRow from './ArticleRow';
 

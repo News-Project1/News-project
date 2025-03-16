@@ -3,7 +3,7 @@ import { FileText, Users, MessageSquare, User } from 'lucide-react';
 import axios from 'axios';
 
 const OverviewSection = () => {
-  // حالة لتخزين البيانات
+  
   const [analytics, setAnalytics] = useState({
     totalArticles: 0,
     totalUsers: 0,
@@ -18,37 +18,36 @@ const OverviewSection = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // جلب البيانات عند تحميل المكون
+  
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        // جلب بيانات التحليلات من API
+       
         const analyticsResponse = await axios.get('http://localhost:8000/admin/analytics');
         
-        // جلب عدد الصحفيين (نحتاج إلى فلترة المستخدمين بناءً على الدور)
+        
         const usersResponse = await axios.get('http://localhost:8000/admin/users');
         const journalistsCount = usersResponse.data.filter(user => 
           user.role === 'journalist' && !user.isDeleted
         ).length;
 
-        // جلب التعليقات لتحديد النسبة المئوية
         const commentsResponse = await axios.get('http://localhost:8000/admin/comments');
         const totalComments = commentsResponse.data.length;
 
-        // حساب التغيرات (هذا مثال، قد تحتاج لتعديله بناءً على منطقك)
+        
         const currentDate = new Date();
         const lastMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1);
 
-        // تحديث الحالة بالبيانات
+       
         setAnalytics({
           totalArticles: analyticsResponse.data.totalArticles,
           totalUsers: analyticsResponse.data.totalUsers,
           totalVideos: analyticsResponse.data.totalVideos,
           totalJournalists: journalistsCount,
-          articlesChange: calculateChange(analyticsResponse.data.totalArticles, 12), // قيمة افتراضية
+          articlesChange: calculateChange(analyticsResponse.data.totalArticles, 12), 
           usersChange: calculateChange(analyticsResponse.data.totalUsers, 8),
           commentsChange: calculateChange(totalComments, 15),
-          journalistsChange: 3 // قيمة ثابتة كما في الكود الأصلي
+          journalistsChange: 3
         });
         
         setLoading(false);
@@ -62,12 +61,12 @@ const OverviewSection = () => {
     fetchAnalytics();
   }, []);
 
-  // دالة مساعدة لحساب التغيير المئوي
+  
   const calculateChange = (current, percentage) => {
     return Math.round((current * percentage) / (100 + percentage));
   };
 
-  // عرض حالة التحميل أو الخطأ
+  
   if (loading) return <div>جاري التحميل...</div>;
   if (error) return <div>{error}</div>;
 

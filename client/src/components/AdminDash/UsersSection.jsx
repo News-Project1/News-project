@@ -7,7 +7,7 @@ const UsersSection = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // جلب المستخدمين من الخادم
+  
   const fetchUsers = async () => {
     setLoading(true);
     try {
@@ -21,7 +21,7 @@ const UsersSection = () => {
     }
   };
 
-  // تحديث دور المستخدم
+  
   const handleRoleChange = async (userId, newRole) => {
     try {
       const response = await axios.put(`http://localhost:8000/admin/users/${userId}/role`, {
@@ -38,7 +38,6 @@ const UsersSection = () => {
     }
   };
 
-  // تبديل حالة المستخدم
   const handleStatusToggle = async (userId) => {
     try {
       const response = await axios.put(`http://localhost:8000/admin/users/${userId}/status`);
@@ -53,12 +52,11 @@ const UsersSection = () => {
     }
   };
 
-  // جلب المستخدمين عند تحميل المكون
+  
   useEffect(() => {
     fetchUsers();
   }, []);
 
-  // عرض حالة التحميل أو الخطأ
   if (loading) {
     return <div className="text-center p-6">جارٍ التحميل...</div>;
   }

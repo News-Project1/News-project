@@ -8,14 +8,14 @@ const FilterBar = ({ searchPlaceholder, onSearch }) => {
   const debouncedSearch = useCallback(
     debounce((term) => {
       onSearch(term);
-    }, 1000), // تأخير 500 مللي ثانية
+    }, 1000), 
     [onSearch]
   );
 
   const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
-    debouncedSearch(term); // استدعاء البحث بعد التأخير
+    debouncedSearch(term); 
   };
 
   return (

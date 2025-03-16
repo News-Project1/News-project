@@ -14,7 +14,6 @@ const VideosSection = () => {
   });
   const [editingVideo, setEditingVideo] = useState(null);
 
-  // جلب الفيديوهات من الخادم
   const fetchVideos = async () => {
     setLoading(true);
     try {
@@ -28,7 +27,6 @@ const VideosSection = () => {
     }
   };
 
-  // إضافة فيديو جديد
   const handleAddVideo = async (e) => {
     e.preventDefault();
     try {
@@ -42,7 +40,7 @@ const VideosSection = () => {
     }
   };
 
-  // تعديل فيديو
+ 
   const handleUpdateVideo = async (videoId) => {
     try {
       const cleanedVideo = {
@@ -64,7 +62,7 @@ const VideosSection = () => {
     }
   };
 
-  // حذف فيديو
+  
   const handleDeleteVideo = async (videoId) => {
     try {
       await axios.delete(`http://localhost:8000/admin/videos/${videoId}`);
@@ -75,12 +73,12 @@ const VideosSection = () => {
     }
   };
 
-  // جلب الفيديوهات عند تحميل المكون
+  
   useEffect(() => {
     fetchVideos();
   }, []);
 
-  // تحديث حقول الفيديو الجديد
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewVideo((prev) => ({
@@ -89,7 +87,7 @@ const VideosSection = () => {
     }));
   };
 
-  // تحديث حقول الفيديو المعدل
+  
   const handleEditInputChange = (e) => {
     const { name, value } = e.target;
     setEditingVideo((prev) => ({
@@ -98,7 +96,7 @@ const VideosSection = () => {
     }));
   };
 
-  // فتح وضع التعديل
+
   const startEditing = (video) => {
     setEditingVideo({ ...video });
   };
@@ -240,7 +238,7 @@ const VideosSection = () => {
                       <td className="p-3">{video.title || 'غير محدد'}</td>
                       <td className="p-3">
                         <a
-                          href={video.videoUrl} // تغيير url إلى videoUrl
+                          href={video.videoUrl} 
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-blue-500"

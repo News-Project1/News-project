@@ -1,4 +1,3 @@
-// ContentSection.js
 import React, { useState } from 'react';
 import ArticleTable from './ArticleTable';
 import FilterBar from './FilterBar';

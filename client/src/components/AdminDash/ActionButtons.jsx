@@ -1,8 +1,7 @@
-// ActionButtons.js
 import React, { useState } from 'react';
 import { Edit, Trash, Check, X } from 'lucide-react';
 import axios from 'axios';
-import { toast } from 'react-toastify'; // استيراد toast
+import { toast } from 'react-toastify'; 
 
 const ActionButtons = ({ status, articleId, article, onStatusUpdate, onArticleUpdate, onArticleDelete }) => {
   const API_BASE_URL = "http://localhost:8000/admin";

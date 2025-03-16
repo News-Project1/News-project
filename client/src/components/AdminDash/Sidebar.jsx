@@ -2,11 +2,9 @@ import React from "react";
 
 const Sidebar = ({ navItems, activeTab, setActiveTab }) => {
   const handleClick = (item) => {
-    // إذا كان هناك onClick مخصص، نفذه
     if (item.onClick) {
       item.onClick();
     } else {
-      // إذا لم يكن هناك onClick، قم بتغيير التبويب النشط فقط
       setActiveTab(item.id);
     }
   };
