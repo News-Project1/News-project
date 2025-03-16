@@ -1,4 +1,5 @@
 const Article = require("../models/Article");
+const Category = require("../models/Category");
 const upload = require("../middleware/upload"); // Import Multer middleware
 
 // ✅ Get all articles by the logged-in journalist (excluding soft-deleted ones)
@@ -171,4 +172,10 @@ exports.getStatus = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+};
+
+// ✅ Get all categories (excluding soft-deleted ones)
+exports.getCategories = async (req, res) => {
+  const categories = await Category.find({ deleted: { $ne: true } });
+  res.json(categories);
 };

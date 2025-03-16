@@ -21,4 +21,7 @@ router.get("/analytics", isAuthenticated, isJournalist, journalistController.get
 // ✅ Get article status (Pending, Published, Rejected)
 router.get("/status", isAuthenticated, isJournalist, journalistController.getStatus);
 
+// ✅ Get Categories 
+router.get("/categories", journalistController.getCategories);
+
 module.exports = router;
