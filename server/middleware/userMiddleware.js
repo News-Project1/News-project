@@ -1,13 +1,16 @@
-// Middleware/userMiddleware.js
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 exports.isAuthenticated = (req, res, next) => {
-  const token =
-    req.cookies.authToken || // التحقق من الكوكيز
+  // Read the token from either the cookie or the Authorization header
+  let token =
+    req.cookies.authToken || // Check the cookie
     (req.headers.authorization
-      ? req.headers.authorization.split(" ")[1] // التحقق من رأس الطلب
+      ? req.headers.authorization.split(" ")[1] // Check the Authorization header
       : null);
+
+  console.log("Token:", token); // Log the token for debugging
+  console.log("Token source:", req.cookies.authToken ? "Cookie" : "Authorization Header"); // Log the token source
 
   if (!token) {
     return res.status(401).json({ message: "Access denied. No token provided." });
@@ -15,17 +18,11 @@ exports.isAuthenticated = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // إضافة معلومات المستخدم إلى الطلب
-    next(); // الانتقال إلى الخطوة التالية
+    console.log("Decoded User:", decoded); // Log the decoded token for debugging
+    req.user = decoded;
+    next();
   } catch (error) {
-    console.error("JWT Verification Error:", error.message);
+    console.error("Token verification failed:", error); // Log the error for debugging
     return res.status(401).json({ message: "Invalid token" });
   }
-};
-
-exports.isReader = (req, res, next) => {
-  if (req.user.role !== "reader") {
-    return res.status(403).json({ message: "Forbidden: Reader access only." });
-  }
-  next(); // الانتقال إلى الخطوة التالية
 };
