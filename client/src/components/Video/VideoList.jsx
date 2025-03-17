@@ -33,7 +33,13 @@ const VideoList = () => {
         {videos.map((video) => (
           <Link to={`/video/${video._id}`} key={video._id}>
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
-              <img src={video.thumbnail} alt={video.title} className="w-full h-48 object-cover" />
+              <iframe
+                src={video.embedUrl} // تأكد من أن embedUrl يحتوي على الرابط القابل للتضمين
+                className="w-full h-64 object-cover"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
               <div className="p-4">
                 <h2 className="text-xl font-semibold">{video.title}</h2>
                 <p className="text-gray-600">{video.description}</p>
