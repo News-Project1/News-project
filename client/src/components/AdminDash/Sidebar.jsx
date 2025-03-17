@@ -10,19 +10,21 @@ const Sidebar = ({ navItems, activeTab, setActiveTab }) => {
   };
 
   return (
-    <div className="w-64 bg-white shadow-md">
-      <ul className="p-4">
+    <div className="w-64 bg-[#213058] shadow-lg h-full">
+      <ul className="p-4 space-y-2">
         {navItems.map((item) => (
           <li
             key={item.id}
-            className={`p-2 mb-2 cursor-pointer rounded ${
-              activeTab === item.id ? "bg-blue-500 text-white" : "hover:bg-gray-200"
+            className={`p-3 cursor-pointer rounded-md transition-all duration-200 ${
+              activeTab === item.id 
+                ? "bg-white bg-opacity-20 text-black font-medium" 
+                : "text-gray-300 hover:bg-white hover:bg-opacity-10"
             }`}
             onClick={() => handleClick(item)}
           >
             <div className="flex items-center">
-              {item.icon}
-              <span className="mr-2">{item.label}</span>
+              {item.icon && <div className="mr-3">{item.icon}</div>}
+              <span>{item.label}</span>
             </div>
           </li>
         ))}
