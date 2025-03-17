@@ -12,7 +12,7 @@ const TrendingSection = () => {
   const fetchTrendingArticles = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_BASE_URL}/articles`, {
+      const response = await axios.get(`${API_BASE_URL}/articles`,{withCredentials: true} ,{
         params: {
           page: 1,
           limit: 10, 

@@ -17,7 +17,7 @@ const VideosSection = () => {
   const fetchVideos = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8000/admin/videos');
+      const response = await axios.get('http://localhost:8000/admin/videos',{withCredentials: true});
       setVideos(response.data.filter((video) => !video.isDeleted));
       setLoading(false);
     } catch (err) {
@@ -30,7 +30,7 @@ const VideosSection = () => {
   const handleAddVideo = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/admin/videos', newVideo);
+      const response = await axios.post('http://localhost:8000/admin/videos' ,{withCredentials: true},newVideo,);
       setVideos((prevVideos) => [...prevVideos, response.data]);
       setNewVideo({ title: '', videoUrl: '', categoryIds: [], description: '' });
       toast.success('تم إضافة الفيديو بنجاح!');
@@ -50,7 +50,7 @@ const VideosSection = () => {
         description: editingVideo.description || '',
       };
       console.log('Data being sent for update:', cleanedVideo); // للتحقق
-      const response = await axios.put(`http://localhost:8000/admin/videos/${videoId}`, cleanedVideo);
+      const response = await axios.put(`http://localhost:8000/admin/videos/${videoId}`,{withCredentials: true}, cleanedVideo);
       setVideos((prevVideos) =>
         prevVideos.map((video) => (video._id === videoId ? response.data : video))
       );
@@ -65,7 +65,7 @@ const VideosSection = () => {
   
   const handleDeleteVideo = async (videoId) => {
     try {
-      await axios.delete(`http://localhost:8000/admin/videos/${videoId}`);
+      await axios.delete(`http://localhost:8000/admin/videos/${videoId}`,{withCredentials: true});
       setVideos((prevVideos) => prevVideos.filter((video) => video._id !== videoId));
       toast.success('تم حذف الفيديو بنجاح!');
     } catch (error) {
