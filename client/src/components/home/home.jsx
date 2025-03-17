@@ -9,6 +9,7 @@ import ArabicNewsLayout from "../ArabicNewsLayout/ArabicNewsLayout";
 import NewsSection from "../NewsSection/NewsSection";
 import NewsTicker from "../NewsTicker/NewsTicker";
 import NewsDashboard from "../NewsDashboard/NewsDashboard";
+import Categories from "../catageroies/catageries";
 
 // import React, { useState, useEffect } from 'react';
 // import { Link } from 'react-router-dom';
@@ -100,7 +101,8 @@ function Home() {
       <div className="container mx-auto px-4 space-y-6">
       <NewsDashboard />
       <ArabicNewsLayout />
-      <NewsCard />
+      {/* <NewsCard /> */}
+      <Categories/>
       <NewsSubscriptionBanner />
       <GamesSection />
     </div>

@@ -91,7 +91,7 @@ app.use("/api/radios", radioRoutes);
 
 //heba 
 // app.use("/api/news", newsRoutes);
-app.use("/api", mostViewRoute);
+// app.use("/api", mostViewRoute);
 app.use("/api/radios", radioRoutes);
 
 // تشغيل الخادم
