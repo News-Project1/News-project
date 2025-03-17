@@ -1,7 +1,7 @@
 // authRoutes.js
 const express = require("express");
 const passport = require("passport");
-const { signin, logoutUser ,authMiddleware , getUserProfile} = require("../controllers/loginController");
+const { signin, logoutUser , getUserProfile} = require("../controllers/loginController");
 const { signup, googleAuth } = require("../controllers/signupController");
 
 const router = express.Router();

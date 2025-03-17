@@ -74,14 +74,12 @@ exports.logoutUser = (req, res) => {
 
 exports.getUserProfile = async (req, res) => {
   try {
-    // Extract token from Authorization header
-    const authHeader = req.headers.authorization;
+    // Extract token from req.body or cookies
+    const token = req.body.token || req.cookies.token;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (!token) {
       return res.status(401).json({ message: "No token provided" });
     }
-
-    const token = authHeader.split(" ")[1]; // Get only the token part
 
     // Verify and decode token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -108,3 +106,4 @@ exports.getUserProfile = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
