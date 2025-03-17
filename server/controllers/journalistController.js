@@ -1,10 +1,21 @@
 const Article = require("../models/Article");
+const Category = require("../models/Category");
 const upload = require("../middleware/upload"); // Import Multer middleware
 
 // ✅ Get all articles by the logged-in journalist (excluding soft-deleted ones)
 exports.getArticles = async (req, res) => {
   try {
-    const articles = await Article.find({ author: req.user._id, isDeleted: false }).populate("categoryIds");
+    const { page = 1, limit = 6 } = req.query; // Default to page 1 and 6 items per page
+    const offset = (page - 1) * limit;
+
+    // Fetch paginated articles
+    const articles = await Article.find({ author: req.user._id, isDeleted: false })
+      .skip(offset)
+      .limit(parseInt(limit))
+      .populate("categoryIds");
+
+    // Get the total number of articles for pagination metadata
+    const totalItems = await Article.countDocuments({ author: req.user._id, isDeleted: false });
 
     // Construct full URLs for featuredImage and media
     const articlesWithFullUrls = articles.map((article) => ({
@@ -13,7 +24,13 @@ exports.getArticles = async (req, res) => {
       media: article.media.map((mediaUrl) => `http://localhost:8000/${mediaUrl}`),
     }));
 
-    res.json(articlesWithFullUrls);
+    // Send response with articles and pagination metadata
+    res.json({
+      articles: articlesWithFullUrls,
+      totalItems,
+      currentPage: parseInt(page),
+      totalPages: Math.ceil(totalItems / limit),
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -166,9 +183,34 @@ exports.getAnalytics = async (req, res) => {
 // ✅ Get article status (Pending, Published, Rejected)
 exports.getStatus = async (req, res) => {
   try {
-    const articles = await Article.find({ author: req.user._id, isDeleted: false }, "title status");
-    res.json(articles);
+    const { page = 1, limit = 6 } = req.query; // Default to page 1 and 6 items per page
+    const offset = (page - 1) * limit;
+
+    // Fetch paginated articles with status
+    const articles = await Article.find(
+      { author: req.user._id, isDeleted: false },
+      "title status"
+    )
+      .skip(offset)
+      .limit(parseInt(limit));
+
+    // Get the total number of articles for pagination metadata
+    const totalItems = await Article.countDocuments({ author: req.user._id, isDeleted: false });
+
+    // Send response with articles and pagination metadata
+    res.json({
+      articles,
+      totalItems,
+      currentPage: parseInt(page),
+      totalPages: Math.ceil(totalItems / limit),
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+};
+
+// ✅ Get all categories (excluding soft-deleted ones)
+exports.getCategories = async (req, res) => {
+  const categories = await Category.find({ deleted: { $ne: true } });
+  res.json(categories);
 };

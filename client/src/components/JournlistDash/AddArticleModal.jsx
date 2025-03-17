@@ -282,7 +282,7 @@ const AddArticleModal = ({ isOpen, onClose, onArticleAdded }) => {
   useEffect(() => {
     if (isOpen) {
       axios
-        .get("http://localhost:8000/api/categories", { withCredentials: true })
+        .get("http://localhost:8000/api/journalist/categories", { withCredentials: true })
         .then((response) => {
           setCategories(response.data);
         })

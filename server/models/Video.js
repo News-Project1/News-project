@@ -5,13 +5,13 @@ const videoSchema = new Schema(
   {
     title: { type: String, required: true },
     description: { type: String },
-    videoUrl: { type: String, required: true }, // URL of video file
-    thumbnail: { type: String }, // Preview image for the video
-    categoryIds: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
-    isPremium: { type: Boolean, default: true }, // True = requires subscription
-    isDeleted: { type: Boolean, default: false }, // ✅ Soft delete field
-    views: { type: Number, default: 0 }, // Track views
-    likes: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+    videoUrl: { type: String, required: true }, // رابط الفيديو
+    embedUrl: { type: String }, // الرابط القابل للتضمين
+    thumbnail: { type: String }, // صورة مصغرة للفيديو
+    isPremium: { type: Boolean, default: true }, // هل الفيديو مدفوع؟
+    isDeleted: { type: Boolean, default: false }, // حذف ناعم
+    views: { type: Number, default: 0 }, // عدد المشاهدات
+    likes: [{ type: Schema.Types.ObjectId, ref: 'User' }] // المستخدمين الذين أعجبهم الفيديو
   },
   { timestamps: true }
 );
