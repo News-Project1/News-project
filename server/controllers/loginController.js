@@ -71,3 +71,39 @@ exports.logoutUser = (req, res) => {
   res.clearCookie("authToken");
   return res.status(200).json({ message: "Logged out successfully" });
 };
+
+exports.getUserProfile = async (req, res) => {
+  try {
+    // Extract token from req.body or cookies
+    const token = req.body.token || req.cookies.token;
+
+    if (!token) {
+      return res.status(401).json({ message: "No token provided" });
+    }
+
+    // Verify and decode token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    console.log("Decoded User ID from token:", decoded.userId);
+
+    // Validate user ID
+    if (!decoded.userId || !mongoose.Types.ObjectId.isValid(decoded.userId)) {
+      return res.status(400).json({ message: "Invalid user ID" });
+    }
+
+    // Fetch user profile from database
+    const user = await User.findById(decoded.userId).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res
+      .status(200)
+      .json({ user, message: "User profile fetched successfully" });
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
