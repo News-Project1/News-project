@@ -47,7 +47,6 @@ const articleRoutes = require("./routes/articleRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const adminRoutes = require('./routes/adminRoutes');
 const connectDB = require("./config/db");
-
 const contactMessage = require("./routes/contactMessageRoutes");
 
 const path = require("path");
