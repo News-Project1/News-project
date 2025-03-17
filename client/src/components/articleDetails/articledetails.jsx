@@ -21,6 +21,7 @@ const ArticleDetails = () => {
         withCredentials: true, // Ensure cookies are sent
       });
       const { article, relatedArticles, comments, engagementStats } = response.data.data;
+      console.log(article.featuredImage);
       setArticle(article);
       setRelatedArticles(relatedArticles);
       setComments(comments);

@@ -13,7 +13,7 @@ const CommentsSection = () => {
   const fetchComments = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_BASE_URL}/comments`);
+      const response = await axios.get(`${API_BASE_URL}/comments`,{withCredentials: true});
       const formattedComments = response.data.map((comment) => ({
         ...comment,
         id: comment._id,

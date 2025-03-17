@@ -30,7 +30,13 @@ const VideoDetail = () => {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">{video.title}</h1>
-      <video controls className="w-full" src={video.videoUrl} />
+      <iframe
+        src={video.embedUrl} // تأكد من أن embedUrl يحتوي على الرابط القابل للتضمين
+        className="w-full h-96"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      ></iframe>
       <p className="mt-4">{video.description}</p>
     </div>
   );

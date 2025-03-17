@@ -13,7 +13,7 @@ const ActionButtons = ({ status, articleId, article, onStatusUpdate, onArticleUp
 
   const updateStatus = async (newStatus) => {
     try {
-      const response = await axios.put(`${API_BASE_URL}/articles/${articleId}/status`, { status: newStatus });
+      const response = await axios.put(`${API_BASE_URL}/articles/${articleId}/status`, { status: newStatus },{withCredentials: true});
       const updatedArticle = response.data;
       toast.success(`تم تحديث الحالة إلى: ${newStatus === 'published' ? 'منشور' : 'مرفوض'}`, { autoClose: 2000 });
       if (onStatusUpdate) {
@@ -28,7 +28,7 @@ const ActionButtons = ({ status, articleId, article, onStatusUpdate, onArticleUp
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`${API_BASE_URL}/articles/${articleId}`, editData);
+      const response = await axios.put(`${API_BASE_URL}/articles/${articleId}`,editData ,{withCredentials: true});
       const updatedArticle = response.data;
       toast.success('تم تعديل المقال بنجاح', { autoClose: 2000 });
       if (onArticleUpdate) {
@@ -44,7 +44,7 @@ const ActionButtons = ({ status, articleId, article, onStatusUpdate, onArticleUp
   const deleteArticle = async () => {
     if (window.confirm('هل أنت متأكد من حذف هذا المقال؟')) {
       try {
-        const response = await axios.delete(`${API_BASE_URL}/articles/${articleId}`);
+        const response = await axios.delete(`${API_BASE_URL}/articles/${articleId}`,{withCredentials: true});
         toast.success('تم حذف المقال بنجاح', { autoClose: 2000 });
         if (onArticleDelete) {
           onArticleDelete(articleId);

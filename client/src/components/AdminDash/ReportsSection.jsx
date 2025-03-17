@@ -11,7 +11,7 @@ const ReportsSection = () => {
   const fetchReports = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8000/admin/reports');
+      const response = await axios.get('http://localhost:8000/admin/reports',{withCredentials: true});
       setReports(response.data);
       setLoading(false);
     } catch (err) {
@@ -24,7 +24,7 @@ const ReportsSection = () => {
   
   const handleStatusChange = async (reportId, newStatus) => {
     try {
-      const response = await axios.put(`http://localhost:8000/admin/reports/${reportId}`, {
+      const response = await axios.put(`http://localhost:8000/admin/reports/${reportId}`, {withCredentials: true},{
         status: newStatus,
       });
       setReports((prevReports) =>

@@ -133,11 +133,17 @@ exports.getArticleById = async (req, res) => {
       .populate('author', 'username')
       .sort({ createdAt: -1 });
 
+       // Construct full URL for featuredImage
+    const articleWithFullUrl = {
+      ...article.toObject(),
+      featuredImage: article.featuredImage ? `http://localhost:8000/${article.featuredImage}` : null,
+    };
+
     // Return the response
     res.status(200).json({
       success: true,
       data: {
-        article,
+        article: articleWithFullUrl,
         relatedArticles,
         comments,
         engagementStats: {
@@ -280,3 +286,4 @@ exports.updateArticle = async (req, res) => {
     res.status(500).json({ success: false, message: 'Error updating article', error: error.message });
   }
 };
+
