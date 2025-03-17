@@ -280,3 +280,4 @@ exports.updateArticle = async (req, res) => {
     res.status(500).json({ success: false, message: 'Error updating article', error: error.message });
   }
 };
+

@@ -12,6 +12,7 @@ import UserProfile from "./components/userProfile/userProfile";
 import Bookmark from "./components/bookmark/bookmark";
 import Admin from "./components/adminDash/admin";
 import Navbar from "./components/navbar/navbar";
+import Footer from "./components/footer/footer";
 import Payment from "./components/payment/payment";
 import Dashboard from "./components/JournlistDash/Dashboard";
 import VideoList from './components/Video/VideoList';
@@ -39,6 +40,7 @@ function App() {
         <Route path="/videos" element={<VideoList />} />
         <Route path="/video/:id" element={<VideoDetail />} />
       </Routes>
+      <Footer/>
     </Router>
   );
 }
