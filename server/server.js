@@ -79,6 +79,7 @@ app.use("/user", bookmarkRoutes);////////////////
 app.use('/api', paymentRoutes); /////////////////
 
 app.use("/auth", authRoutes);
+app.use("/api/users", authRoutes);
 app.use("/api", contactMessage);
 app.use("/api/articles", articleRoutes);
 app.use("/api/categories", categoryRoutes);
