@@ -13,8 +13,21 @@ exports.createCategory = async (req, res) => {
 
 // ✅ Get all categories (excluding soft-deleted ones)
 exports.getCategories = async (req, res) => {
-  const categories = await Category.find({ deleted: { $ne: true } });
-  res.json(categories);
+  try {
+    // Fetch categories where isDeleted is false or not set
+    const categories = await Category.find({
+      $or: [
+        { isDeleted: false },
+        { isDeleted: { $exists: false } }
+      ]
+    });
+    if (categories.length === 0) {
+      return res.status(200).json({ success: true, data: [], message: 'لا توجد فئات متاحة' });
+    }
+    res.status(200).json({ success: true, data: categories, message: 'تم جلب الفئات بنجاح' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'خطأ في جلب الفئات', error: error.message });
+  }
 };
 
 // ✅ Update category
