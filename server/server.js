@@ -38,11 +38,11 @@
 // app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 require("dotenv").config();
+require('./models');
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const connectDB = require("./config/db");
-require('./models');
 const authRoutes = require("./routes/authRoutes");
 const journalistRoutes = require("./routes/journalistRoutes");
 const articleRoutes = require("./routes/articleRoutes");
