@@ -79,9 +79,9 @@ const Navbar = () => {
           <li>
             <Link 
               className="hover:text-[#F4AE3F] transition-all duration-300 relative pb-1 after:content-[''] after:absolute after:h-0.5 after:w-0 after:left-0 after:bottom-0 after:bg-[#F4AE3F] hover:after:w-full after:transition-all after:duration-300" 
-              to="/payment"
+              to="/bookmarks"
             >
-              اشتراك
+              المشاهدة لاحقا
             </Link>
           </li>
           <li>
@@ -92,13 +92,7 @@ const Navbar = () => {
               التصنيفات
             </Link>
           </li>
-          <li>
-          <Link 
-              className="hover:text-[#F4AE3F] transition-all duration-300 relative pb-1 after:content-[''] after:absolute after:h-0.5 after:w-0 after:left-0 after:bottom-0 after:bg-[#F4AE3F] hover:after:w-full after:transition-all after:duration-300" 
-              to="/articles/:categoryId"
-            >
-مقالات             </Link>
-          </li>
+          
           {user && user.role === "صحفي" && (
             <li>
               <Link 
@@ -124,7 +118,7 @@ const Navbar = () => {
               className="hover:text-[#F4AE3F] transition-all duration-300 relative pb-1 after:content-[''] after:absolute after:h-0.5 after:w-0 after:left-0 after:bottom-0 after:bg-[#F4AE3F] hover:after:w-full after:transition-all after:duration-300" 
               to="/videos"
             >
-              الفيديوهات
+              بودكاست
             </Link>
           </li>
         </ul>

@@ -1,9 +1,9 @@
 require("dotenv").config();
+require('./models');
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const connectDB = require("./config/db");
-require('./models'); // تأكد من أن الموديلات مُحمّلة
 const authRoutes = require("./routes/authRoutes");
 const journalistRoutes = require("./routes/journalistRoutes");
 const articleRoutes = require("./routes/articleRoutes");
@@ -13,20 +13,18 @@ const adminRoutes = require('./routes/adminRoutes');
 const contactMessage = require("./routes/contactMessageRoutes");
 const paymentRoutes = require('./routes/PaymentRoutes'); // ربط الـ API بـ paymentRoutes
 const radioRoutes = require("./routes/radioRoutes");
-const path = require("path");
 
+const bookmarkRoutes = require("./routes/bookMarkRoute");///////////////////////
+
+
+const path = require("path");
 const app = express();
 
-// Middleware لخدمة الملفات الثابتة (مثل الصور)
+
+
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-// Middleware لتحليل JSON
 app.use(express.json());
-
-// Middleware لتحليل الكوكيز
 app.use(cookieParser());
-
-// Middleware لتفعيل CORS
 app.use(
   cors({
     origin: (_, callback) => {
@@ -35,12 +33,11 @@ app.use(
     credentials: true,
   })
 );
-
-// الاتصال بقاعدة البيانات
 connectDB();
 
-// ربط الـ Routes
-app.use('/api', paymentRoutes); // ربط الـ API بـ paymentRoutes
+app.use("/user", bookmarkRoutes);////////////////
+app.use('/api', paymentRoutes); /////////////////
+
 app.use("/auth", authRoutes);
 app.use("/api", contactMessage);
 app.use("/api/articles", articleRoutes);
