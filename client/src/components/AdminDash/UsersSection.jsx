@@ -11,7 +11,7 @@ const UsersSection = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8000/admin/users');
+      const response = await axios.get('http://localhost:8000/admin/users',{withCredentials:true});
       setUsers(response.data);
       setLoading(false);
     } catch (err) {
@@ -26,7 +26,7 @@ const UsersSection = () => {
     try {
       const response = await axios.put(`http://localhost:8000/admin/users/${userId}/role`, {
         role: newRole,
-      });
+      },{withCredentials: true});
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
           user._id === userId ? { ...user, role: response.data.role } : user
@@ -40,7 +40,7 @@ const UsersSection = () => {
 
   const handleStatusToggle = async (userId) => {
     try {
-      const response = await axios.put(`http://localhost:8000/admin/users/${userId}/status`);
+      const response = await axios.put(`http://localhost:8000/admin/users/${userId}/status`,{withCredentials: true});
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
           user._id === userId ? { ...user, isDeleted: response.data.isDeleted } : user

@@ -113,9 +113,46 @@ const Navbar = () => {
           <li>
             <Link 
               className="hover:text-[#F4AE3F] transition-all duration-300 relative pb-1 after:content-[''] after:absolute after:h-0.5 after:w-0 after:left-0 after:bottom-0 after:bg-[#F4AE3F] hover:after:w-full after:transition-all after:duration-300" 
-              to="/payment"
+              to="/bookmarks"
             >
-              اشتراك
+              المشاهدة لاحقا
+            </Link>
+          </li>
+          <li>
+            <Link 
+              className="hover:text-[#F4AE3F] transition-all duration-300 relative pb-1 after:content-[''] after:absolute after:h-0.5 after:w-0 after:left-0 after:bottom-0 after:bg-[#F4AE3F] hover:after:w-full after:transition-all after:duration-300" 
+              to="/categories"
+            >
+              التصنيفات
+            </Link>
+          </li>
+          
+          {user && user.role === "صحفي" && (
+            <li>
+              <Link 
+                className="hover:text-[#F4AE3F] transition-all duration-300 relative pb-1 after:content-[''] after:absolute after:h-0.5 after:w-0 after:left-0 after:bottom-0 after:bg-[#F4AE3F] hover:after:w-full after:transition-all after:duration-300" 
+                to="/journalist"
+              >
+                لوحة الصحفي
+              </Link>
+            </li>
+          )}
+          {user && user.role === "admin" && (
+            <li>
+              <Link 
+                className="hover:text-[#F4AE3F] transition-all duration-300 relative pb-1 after:content-[''] after:absolute after:h-0.5 after:w-0 after:left-0 after:bottom-0 after:bg-[#F4AE3F] hover:after:w-full after:transition-all after:duration-300" 
+                to="/admin"
+              >
+                لوحة الإدارة
+              </Link>
+            </li>
+          )}
+          <li>
+            <Link 
+              className="hover:text-[#F4AE3F] transition-all duration-300 relative pb-1 after:content-[''] after:absolute after:h-0.5 after:w-0 after:left-0 after:bottom-0 after:bg-[#F4AE3F] hover:after:w-full after:transition-all after:duration-300" 
+              to="/videos"
+            >
+              بودكاست
             </Link>
           </li>
         </ul>
@@ -145,6 +182,14 @@ const Navbar = () => {
               >
                 <div className="bg-[#F0E6D7] p-2 rounded-full text-[#213058]">
                   <FaUser className="text-xl" />
+                </div>
+              </Link>
+              <Link
+                to="/bookmarks"
+                className="hover:text-[#F4AE3F] transition-colors duration-300 flex items-center"
+              >
+                <div className="bg-[#F0E6D7] p-2 rounded-full text-[#213058]">
+                  <FaBookmark className="text-xl" />
                 </div>
               </Link>
               <button
@@ -204,6 +249,50 @@ const Navbar = () => {
             <span>اشتراك</span>
             <span className="text-[#F0E6D7] text-xl">›</span>
           </Link>
+          <Link
+            to="/categories"
+            className="block text-sm font-medium hover:bg-[#F4AE3F] p-3 rounded-lg transition-all flex items-center justify-between"
+            onClick={() => setIsOpen(false)}
+          >
+            <span>التصنيفات</span>
+            <span className="text-[#F0E6D7] text-xl">›</span>
+          </Link>
+          <Link
+            to="/articles"
+            className="block text-sm font-medium hover:bg-[#F4AE3F] p-3 rounded-lg transition-all flex items-center justify-between"
+            onClick={() => setIsOpen(false)}
+          >
+            <span>المقالات</span>
+            <span className="text-[#F0E6D7] text-xl">›</span>
+          </Link>
+          {user && user.role === "صحفي" && (
+            <Link
+              to="/journalist"
+              className="block text-sm font-medium hover:bg-[#F4AE3F] p-3 rounded-lg transition-all flex items-center justify-between"
+              onClick={() => setIsOpen(false)}
+            >
+              <span>لوحة الصحفي</span>
+              <span className="text-[#F0E6D7] text-xl">›</span>
+            </Link>
+          )}
+          {user && user.role === "admin" && (
+            <Link
+              to="/admin"
+              className="block text-sm font-medium hover:bg-[#F4AE3F] p-3 rounded-lg transition-all flex items-center justify-between"
+              onClick={() => setIsOpen(false)}
+            >
+              <span>لوحة الإدارة</span>
+              <span className="text-[#F0E6D7] text-xl">›</span>
+            </Link>
+          )}
+          <Link
+            to="/videos"
+            className="block text-sm font-medium hover:bg-[#F4AE3F] p-3 rounded-lg transition-all flex items-center justify-between"
+            onClick={() => setIsOpen(false)}
+          >
+            <span>الفيديوهات</span>
+            <span className="text-[#F0E6D7] text-xl">›</span>
+          </Link>
 
           <div className="h-px bg-gradient-to-r from-transparent via-[#F0E6D7] to-transparent my-3"></div>
 
@@ -233,6 +322,18 @@ const Navbar = () => {
                     <FaUser className="text-lg" />
                   </div>
                   <span>البروفايل</span>
+                </div>
+                <span className="text-[#F0E6D7] text-xl">›</span>
+              </Link>
+              <Link
+                to="/bookmarks"
+                className="block text-sm hover:bg-[#F4AE3F] p-3 rounded-lg transition-all flex items-center space-x-2 justify-between"
+              >
+                <div className="flex items-center space-x-2">
+                  <div className="bg-[#F0E6D7] p-1.5 rounded-full text-[#213058]">
+                    <FaBookmark className="text-lg" />
+                  </div>
+                  <span>المفضلة</span>
                 </div>
                 <span className="text-[#F0E6D7] text-xl">›</span>
               </Link>

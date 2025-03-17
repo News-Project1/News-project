@@ -18,7 +18,7 @@ const AnalyticsSection = () => {
   const fetchAnalytics = async (range) => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_BASE_URL}/analytics`, {
+      const response = await axios.get(`${API_BASE_URL}/analytics`,{withCredentials: true} ,{
         params: { timeRange: range },
       });
       const data = response.data;

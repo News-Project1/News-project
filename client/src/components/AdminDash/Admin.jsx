@@ -49,7 +49,7 @@ const Admin = () => {
   const fetchArticles = async (page = 1, search = '') => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_BASE_URL}/articles`, {
+      const response = await axios.get(`${API_BASE_URL}/articles`,{withCredentials: true} ,{
         params: { page, limit: LIMIT, search }
       });
       const { articles: fetchedArticles, totalArticles, currentPage, totalPages } = response.data;
@@ -81,10 +81,10 @@ const Admin = () => {
       await fetchArticles(1, searchTerm); // جلب الصفحة الأولى عند التحميل
       try {
         const [commentsRes, journalistsRes, reportsRes, analyticsRes] = await Promise.all([
-          axios.get(`${API_BASE_URL}/comments`),
-          axios.get(`${API_BASE_URL}/users`),
-          axios.get(`${API_BASE_URL}/reports`),
-          axios.get(`${API_BASE_URL}/analytics`),
+          axios.get(`${API_BASE_URL}/comments`, {withCredentials: true}),
+          axios.get(`${API_BASE_URL}/users`,{withCredentials: true}),
+          axios.get(`${API_BASE_URL}/reports`,{withCredentials: true}),
+          axios.get(`${API_BASE_URL}/analytics`,{withCredentials: true}),
         ]);
 
         setComments(commentsRes.data);

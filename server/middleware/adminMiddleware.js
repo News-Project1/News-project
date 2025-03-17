@@ -29,7 +29,7 @@ exports.isAuthenticated = (req, res, next) => {
 
 
 exports.isAdmin = (req, res, next) => {
-  console.log("Checking Role:", req.user.role); // ✅ Log the role
+  console.log("Checking Role:", req.user.role); 
 
   if (!req.user || req.user.role !== "admin") {
     return res.status(403).json({ message: "Access denied. admin only." });
