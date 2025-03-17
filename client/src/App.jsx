@@ -14,6 +14,15 @@ import Admin from "./components/AdminDash/Admin";
 import Navbar from "./components/navbar/navbar";
 import Footer from "./components/footer/footer";
 import Payment from "./components/payment/payment";
+import DigiboostLandingPage from "./components/DigiboostLandingPage/DigiboostLandingPage";
+import HeroSection from "./components/HeroSection/HeroSection";
+import Newscard from "./components/NewsCard/NewsCard";
+import GamesSection from "./components/GamesSection/GamesSection";
+import SudokuGame from "./components/SudokuGame/SudokuGame";
+import CutWordGame from "./components/CutWordGame/CutWordGame";
+import MainFeature from './components/MainFeature/MainFeature';
+import Sidebar from './components/sidebar/saidbar';
+import CartoonSection from './components/CartoonSection/CartoonSection';
 import Dashboard from "./components/JournlistDash/Dashboard";
 import VideoList from './components/Video/VideoList';
 import VideoDetail from './components/Video/VideoDetail';
@@ -35,6 +44,12 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/bookmarks" element={<Bookmark />} />
+        <Route path="/DigiboostLandingPage" element={<DigiboostLandingPage />} />
+        <Route path="/HeroSection" element={<HeroSection />} />
+        <Route path="/Newscard" element={<Newscard/>} />
+        <Route path="/GamesSection" element={<GamesSection />} />
+        <Route path="/sudoku" element={<SudokuGame />} />
+        <Route path="/cutwordgame" element={<CutWordGame />} />
         <Route path="/journalist/*" element={<Dashboard />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/videos" element={<VideoList />} />

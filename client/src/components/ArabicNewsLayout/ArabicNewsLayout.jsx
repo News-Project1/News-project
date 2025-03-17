@@ -1,12 +1,14 @@
 // components/ArabicNewsLayout/ArabicNewsLayout.jsx
 import React from 'react';
-import MainFeature from '../';
+import MainFeature from '../MainFeature/MainFeature';
 import Sidebar from '../sidebar/saidbar';
+import CartoonSection from '../CartoonSection/CartoonSection';
+import Footer from '../Footer/Footer';
 
 function ArabicNewsLayout() {
   return (
     <div className="  font-sans" dir="rtl">
-
+    
       <div className="container mx-auto px-4 py-6">
         <div className="flex flex-col lg:flex-row gap-6">
         <div className=" border-gray-300 pb-4 mb-8">

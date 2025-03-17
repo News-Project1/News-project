@@ -1,3 +1,16 @@
+import React from "react";
+
+import HeroSection from "../HeroSection/HeroSection";
+import NewsCard from "../NewsCard/NewsCard";
+import NewsSubscriptionBanner from "../NewsSubscriptionBanner/NewsSubscriptionBanner";
+import GamesSection from "../GamesSection/GamesSection";
+import BreakingNews from "../BreakingNews/BreakingNews";
+import ArabicNewsLayout from "../ArabicNewsLayout/ArabicNewsLayout";
+import NewsSection from "../NewsSection/NewsSection";
+import NewsTicker from "../NewsTicker/NewsTicker";
+import NewsDashboard from "../NewsDashboard/NewsDashboard";
+import Categories from "../catageroies/catageries";
+
 // import React, { useState, useEffect } from 'react';
 // import { Link } from 'react-router-dom';
 // import axios from 'axios';
@@ -68,35 +81,37 @@
 
 // export default Home;
 
-import React from "react";
+// import React from "react";
 
-import HeroSection from "../HeroSection/HeroSection";
+// import HeroSection from "../HeroSection/HeroSection";
 // import NewsCard from "../NewsCard/NewsCard";
 // import NewsSubscriptionBanner from "../NewsSubscriptionBanner/NewsSubscriptionBanner";
 // import GamesSection from "../GamesSection/GamesSection";
 // import BreakingNews from "../BreakingNews/BreakingNews";
 // import SudokuGame from "../ArabicNewsLayout/ArabicNewsLayout";
-import Catageries from "../catageroies/catageries"
+// import Catageries from "../catageroies/catageries"
 // import NewsTicker from "../NewsTicker/NewsTicker";
-import NewsDashboard from "../NewsDashboard/NewsDashboard";
+// import NewsDashboard from "../NewsDashboard/NewsDashboard";
 
 function Home() {
   return (
     <>
       <HeroSection />
-      {/* <NewsTicker /> */}
+      <NewsTicker />
       <div className="container mx-auto px-4 space-y-6">
       <NewsDashboard />
-      <Catageries />
-
-      {/* <ArabicNewsLayout /> */}
+      <ArabicNewsLayout />
       {/* <NewsCard /> */}
-      {/* <NewsSubscriptionBanner /> */}
-      {/* <GamesSection /> */}
+      <Categories/>
+      <NewsSubscriptionBanner />
+      <GamesSection />
     </div>
     </>
 
   );
 }
+
+  
+  
 
 export default Home;
