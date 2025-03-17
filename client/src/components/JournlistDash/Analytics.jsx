@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, PieChart, Pie, Cell, LineChart, Line, ResponsiveContainer, CartesianGrid } from "recharts";
+import { 
+  Loader, AlertCircle, BarChart2, PieChart as PieChartIcon, 
+  TrendingUp, Eye, ThumbsUp, FileText, Award, Info
+} from "lucide-react";
 
 export default function Analytics() {
   const [articles, setArticles] = useState([]);
@@ -16,36 +20,35 @@ export default function Analytics() {
       })
       .catch((error) => {
         console.error("Error fetching analytics:", error);
-        setError("Failed to fetch analytics. Please try again later.");
+        setError("فشل في تحميل البيانات التحليلية. يرجى المحاولة مرة أخرى.");
         setLoading(false);
       });
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
+  // Prepare data for charts (when data is available)
+  const prepareChartData = () => {
+    // Only prepare data if articles exist
+    if (!articles.length) return { chartData: [], viewDistribution: [], topArticles: [] };
 
-  if (error) {
-    return <div className="p-4 text-red-500 text-center font-medium">{error}</div>;
-  }
+    const chartData = articles.map(article => ({
+      name: article.title.length > 20 ? article.title.substring(0, 20) + "..." : article.title,
+      views: article.views,
+      likes: article.likes?.length || 0,
+      engagement: calculateEngagement(article),
+      id: article.id
+    }));
 
-  // Prepare data for charts
-  const chartData = articles.map(article => ({
-    name: article.title.length > 20 ? article.title.substring(0, 20) + "..." : article.title,
-    views: article.views,
-    likes: article.likes?.length || 0,
-    engagement: calculateEngagement(article),
-    id: article.id
-  }));
+    // Distribution data for pie chart
+    const viewDistribution = articles.map(article => ({
+      name: article.title.length > 15 ? article.title.substring(0, 15) + "..." : article.title,
+      value: article.views
+    }));
 
-  // Calculate total metrics
-  const totalViews = articles.reduce((sum, article) => sum + article.views, 0);
-  const totalLikes = articles.reduce((sum, article) => sum + (article.likes?.length || 0), 0);
-  const totalArticles = articles.length;
+    // Top performing articles
+    const topArticles = [...articles].sort((a, b) => b.views - a.views).slice(0, 5);
+
+    return { chartData, viewDistribution, topArticles };
+  };
 
   // Function to calculate engagement rate (likes/views)
   function calculateEngagement(article) {
@@ -53,17 +56,37 @@ export default function Analytics() {
     return Math.round(((article.likes?.length || 0) / article.views) * 100);
   }
 
-  // Top performing articles
-  const topArticles = [...articles].sort((a, b) => b.views - a.views).slice(0, 5);
-
-  // Distribution data for pie chart
-  const viewDistribution = articles.map(article => ({
-    name: article.title.length > 15 ? article.title.substring(0, 15) + "..." : article.title,
-    value: article.views
-  }));
+  // Calculate total metrics
+  const totalViews = articles.reduce((sum, article) => sum + article.views, 0);
+  const totalLikes = articles.reduce((sum, article) => sum + (article.likes?.length || 0), 0);
+  const totalArticles = articles.length;
 
   // Colors for pie chart
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#ff7300'];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="flex flex-col items-center space-y-2">
+          <Loader className="w-8 h-8 text-indigo-500 animate-spin" />
+          <p className="text-gray-600">جاري تحميل البيانات التحليلية...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6 bg-red-50 border border-red-200 rounded-lg">
+        <div className="flex items-center space-x-2 space-x-reverse">
+          <AlertCircle className="w-5 h-5 text-red-500" />
+          <p className="text-red-600 font-medium">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  const { chartData, viewDistribution, topArticles } = prepareChartData();
 
   return (
     <div className="p-4 sm:p-6 bg-gray-50 min-h-screen" dir="rtl">
@@ -72,15 +95,24 @@ export default function Analytics() {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-white p-4 rounded-lg shadow-md">
-          <h3 className="text-gray-500 text-sm">إجمالي المشاهدات</h3>
+          <div className="flex items-center space-x-2 space-x-reverse mb-2">
+            <Eye className="w-5 h-5 text-indigo-500" />
+            <h3 className="text-gray-500 text-sm">إجمالي المشاهدات</h3>
+          </div>
           <p className="text-3xl font-bold">{totalViews}</p>
         </div>
         <div className="bg-white p-4 rounded-lg shadow-md">
-          <h3 className="text-gray-500 text-sm">إجمالي الإعجابات</h3>
+          <div className="flex items-center space-x-2 space-x-reverse mb-2">
+            <ThumbsUp className="w-5 h-5 text-indigo-500" />
+            <h3 className="text-gray-500 text-sm">إجمالي الإعجابات</h3>
+          </div>
           <p className="text-3xl font-bold">{totalLikes}</p>
         </div>
         <div className="bg-white p-4 rounded-lg shadow-md">
-          <h3 className="text-gray-500 text-sm">عدد المقالات</h3>
+          <div className="flex items-center space-x-2 space-x-reverse mb-2">
+            <FileText className="w-5 h-5 text-indigo-500" />
+            <h3 className="text-gray-500 text-sm">عدد المقالات</h3>
+          </div>
           <p className="text-3xl font-bold">{totalArticles}</p>
         </div>
       </div>
@@ -91,21 +123,24 @@ export default function Analytics() {
           <nav className="flex">
             <button 
               onClick={() => setActiveTab("overview")}
-              className={`py-3 px-4 ${activeTab === "overview" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"}`}
+              className={`py-3 px-4 flex items-center gap-2 ${activeTab === "overview" ? "border-b-2 border-indigo-500 text-indigo-500" : "text-gray-500"}`}
             >
-              نظرة عامة
+              <BarChart2 size={16} />
+              <span>نظرة عامة</span>
             </button>
             <button 
               onClick={() => setActiveTab("articles")}
-              className={`py-3 px-4 ${activeTab === "articles" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"}`}
+              className={`py-3 px-4 flex items-center gap-2 ${activeTab === "articles" ? "border-b-2 border-indigo-500 text-indigo-500" : "text-gray-500"}`}
             >
-              أداء المقالات
+              <Award size={16} />
+              <span>أداء المقالات</span>
             </button>
             <button 
               onClick={() => setActiveTab("engagement")}
-              className={`py-3 px-4 ${activeTab === "engagement" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"}`}
+              className={`py-3 px-4 flex items-center gap-2 ${activeTab === "engagement" ? "border-b-2 border-indigo-500 text-indigo-500" : "text-gray-500"}`}
             >
-              معدل التفاعل
+              <TrendingUp size={16} />
+              <span>معدل التفاعل</span>
             </button>
           </nav>
         </div>
@@ -113,10 +148,16 @@ export default function Analytics() {
         <div className="p-4">
           {activeTab === "overview" && (
             <div>
-              <h2 className="text-lg font-medium mb-4">نظرة عامة على الأداء</h2>
+              <h2 className="text-lg font-medium mb-4 flex items-center gap-2">
+                <BarChart2 size={18} className="text-indigo-500" />
+                <span>نظرة عامة على الأداء</span>
+              </h2>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="text-md font-medium mb-2">توزيع المشاهدات</h3>
+                  <h3 className="text-md font-medium mb-2 flex items-center gap-2">
+                    <PieChartIcon size={16} className="text-indigo-500" />
+                    <span>توزيع المشاهدات</span>
+                  </h3>
                   <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
                       <Pie
@@ -138,7 +179,10 @@ export default function Analytics() {
                   </ResponsiveContainer>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="text-md font-medium mb-2">المشاهدات والإعجابات</h3>
+                  <h3 className="text-md font-medium mb-2 flex items-center gap-2">
+                    <BarChart2 size={16} className="text-indigo-500" />
+                    <span>المشاهدات والإعجابات</span>
+                  </h3>
                   <ResponsiveContainer width="100%" height={300}>
                     <BarChart data={chartData}>
                       <CartesianGrid strokeDasharray="3 3" />
@@ -157,7 +201,10 @@ export default function Analytics() {
           
           {activeTab === "articles" && (
             <div>
-              <h2 className="text-lg font-medium mb-4">أفضل المقالات أداءً</h2>
+              <h2 className="text-lg font-medium mb-4 flex items-center gap-2">
+                <Award size={18} className="text-indigo-500" />
+                <span>أفضل المقالات أداءً</span>
+              </h2>
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
@@ -205,7 +252,10 @@ export default function Analytics() {
           
           {activeTab === "engagement" && (
             <div>
-              <h2 className="text-lg font-medium mb-4">معدل التفاعل</h2>
+              <h2 className="text-lg font-medium mb-4 flex items-center gap-2">
+                <TrendingUp size={18} className="text-indigo-500" />
+                <span>معدل التفاعل</span>
+              </h2>
               <ResponsiveContainer width="100%" height={400}>
                 <LineChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -217,7 +267,10 @@ export default function Analytics() {
                 </LineChart>
               </ResponsiveContainer>
               <div className="mt-6 bg-blue-50 p-4 rounded-lg">
-                <h3 className="font-medium text-blue-800 mb-2">نصائح لتحسين معدل التفاعل</h3>
+                <h3 className="font-medium text-blue-800 mb-2 flex items-center gap-2">
+                  <Info size={16} className="text-blue-800" />
+                  <span>نصائح لتحسين معدل التفاعل</span>
+                </h3>
                 <ul className="list-disc list-inside text-sm text-blue-700">
                   <li>استخدم عناوين جذابة ومثيرة للاهتمام</li>
                   <li>أضف صوراً ومقاطع فيديو عالية الجودة</li>
@@ -233,3 +286,4 @@ export default function Analytics() {
     </div>
   );
 }
+
