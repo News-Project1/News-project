@@ -37,12 +37,12 @@ const Categories = () => {
 
   // Sample placeholder images (using placeholder in case category doesn't have an image)
   const placeholderImages = [
-    "/api/placeholder/300/200",
-    "/api/placeholder/300/200",
-    "/api/placeholder/300/200",
-    "/api/placeholder/300/200",
-    "/api/placeholder/300/200",
-    "/api/placeholder/300/200"
+    "https://i.pinimg.com/474x/cf/cb/bf/cfcbbf69329a14987209887ed1def268.jpg",
+    "https://i.pinimg.com/474x/0f/51/33/0f51332ebecf01ae443cb6642dd5b15b.jpg",
+    "https://i.pinimg.com/736x/a2/fb/9f/a2fb9f5ba30a1cafa4a8ee33379c540b.jpg",
+    "https://i.pinimg.com/474x/26/72/fc/2672fc53ada0e48c256a564fdce0dcff.jpg",
+    "https://i.pinimg.com/474x/09/41/01/0941016d1a702381b2c1b2cc6246435c.jpg",
+    "https://i.pinimg.com/474x/e8/e6/8d/e8e68d53a52f6a5231cba63da0c2f019.jpg"
   ];
 
   if (loading) {

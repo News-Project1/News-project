@@ -79,7 +79,7 @@ import HeroSection from "../HeroSection/HeroSection";
 import Catageries from "../catageroies/catageries"
 // import NewsTicker from "../NewsTicker/NewsTicker";
 import NewsDashboard from "../NewsDashboard/NewsDashboard";
-
+import StatisticsSection from '../StatisticsSection/StatisticsSection';
 function Home() {
   return (
     <>
@@ -88,6 +88,7 @@ function Home() {
       <div className="container mx-auto px-4 space-y-6">
       <NewsDashboard />
       <Catageries />
+      <StatisticsSection />
 
       {/* <ArabicNewsLayout /> */}
       {/* <NewsCard /> */}
