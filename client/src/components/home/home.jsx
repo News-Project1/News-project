@@ -9,8 +9,8 @@ import ArabicNewsLayout from "../ArabicNewsLayout/ArabicNewsLayout";
 import NewsSection from "../NewsSection/NewsSection";
 import NewsTicker from "../NewsTicker/NewsTicker";
 import NewsDashboard from "../NewsDashboard/NewsDashboard";
-import Categories from "../catageroies/catageries";
-
+import StatisticsSection from '../StatisticsSection/StatisticsSection';
+import Categories from "../catageroies/catageries"
 // import React, { useState, useEffect } from 'react';
 // import { Link } from 'react-router-dom';
 // import axios from 'axios';
@@ -100,9 +100,12 @@ function Home() {
       <NewsTicker />
       <div className="container mx-auto px-4 space-y-6">
       <NewsDashboard />
+      <Categories />
+      <StatisticsSection />
+
+      {/* <ArabicNewsLayout /> */}
       <ArabicNewsLayout />
       {/* <NewsCard /> */}
-      <Categories/>
       <NewsSubscriptionBanner />
       <GamesSection />
     </div>

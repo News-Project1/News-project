@@ -3,7 +3,6 @@ import React from 'react';
 import MainFeature from '../MainFeature/MainFeature';
 import Sidebar from '../sidebar/saidbar';
 import CartoonSection from '../CartoonSection/CartoonSection';
-import Footer from '../Footer/Footer';
 
 function ArabicNewsLayout() {
   return (

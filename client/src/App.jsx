@@ -16,7 +16,7 @@ import Payment from "./components/payment/payment";
 import DigiboostLandingPage from "./components/DigiboostLandingPage/DigiboostLandingPage";
 import HeroSection from "./components/HeroSection/HeroSection";
 import Newscard from "./components/NewsCard/NewsCard";
-import Footer from "./components/Footer/Footer";
+import Footer from "./components/footer/footer"
 import GamesSection from "./components/GamesSection/GamesSection";
 import SudokuGame from "./components/SudokuGame/SudokuGame";
 import CutWordGame from "./components/CutWordGame/CutWordGame";
