@@ -33,6 +33,8 @@ require("dotenv").config();
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const connectDB = require("./config/db");
+require('./models');
 const authRoutes = require("./routes/authRoutes");
 const journalistRoutes = require("./routes/journalistRoutes");
 const articleRoutes = require("./routes/articleRoutes");
@@ -45,7 +47,16 @@ const radioRoutes = require("./routes/radioRoutes");
 
 const mostViewRoute = require("./routes/mostViewRoute");
 ///////////////////////////////////
+const videoRoutes = require('./routes/videoRoutes');
+
+const adminRoutes = require('./routes/adminRoutes');
 const contactMessage = require("./routes/contactMessageRoutes");
+
+
+
+const paymentRoutes = require('./routes/PaymentRoutes');////////////////
+
+
 
 const path = require("path");
 
@@ -63,11 +74,18 @@ app.use(
 );
 connectDB();
 
+app.use('/api', paymentRoutes); // ربط الـ API بـ paymentRoutes///////////////
+
 app.use("/auth", authRoutes);
 app.use("/api", contactMessage);
 app.use("/api/articles", articleRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/journalist", journalistRoutes);
+app.use("/api/videos", videoRoutes);
+app.use('/admin', adminRoutes);
+// routes/admin.js
+
+
 
 //heba 
 // app.use("/api/news", newsRoutes);
