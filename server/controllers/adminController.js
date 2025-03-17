@@ -187,7 +187,7 @@ exports.toggleUserStatus = async (req, res) => {
 
 exports.getVideos = async (req, res) => {
   try {
-    const videos = await Video.find().populate('categoryIds');
+    const videos = await Video.find().populate('_id');
     res.status(200).json(videos);
   } catch (error) {
     res.status(500).json({ error: error.message });

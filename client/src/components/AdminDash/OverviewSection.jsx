@@ -23,15 +23,15 @@ const OverviewSection = () => {
     const fetchAnalytics = async () => {
       try {
        
-        const analyticsResponse = await axios.get('http://localhost:8000/admin/analytics');
+        const analyticsResponse = await axios.get('http://localhost:8000/admin/analytics',{withCredentials: true});
         
         
-        const usersResponse = await axios.get('http://localhost:8000/admin/users');
+        const usersResponse = await axios.get('http://localhost:8000/admin/users',{withCredentials: true});
         const journalistsCount = usersResponse.data.filter(user => 
           user.role === 'journalist' && !user.isDeleted
         ).length;
 
-        const commentsResponse = await axios.get('http://localhost:8000/admin/comments');
+        const commentsResponse = await axios.get('http://localhost:8000/admin/comments',{withCredentials: true});
         const totalComments = commentsResponse.data.length;
 
         
