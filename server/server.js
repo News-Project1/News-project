@@ -52,15 +52,15 @@ const videoRoutes = require('./routes/videoRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const contactMessage = require("./routes/contactMessageRoutes");
 
-
-
+const bookmarkRoutes = require("./routes/bookMarkRoute");///////////////////////
 const paymentRoutes = require('./routes/PaymentRoutes');////////////////
 
 
-
 const path = require("path");
-
 const app = express();
+
+
+
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
 app.use(cookieParser());
@@ -74,7 +74,8 @@ app.use(
 );
 connectDB();
 
-app.use('/api', paymentRoutes); // ربط الـ API بـ paymentRoutes///////////////
+app.use("/user", bookmarkRoutes);////////////////
+app.use('/api', paymentRoutes); /////////////////
 
 app.use("/auth", authRoutes);
 app.use("/api", contactMessage);
