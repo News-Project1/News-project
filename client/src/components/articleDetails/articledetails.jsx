@@ -118,16 +118,23 @@ const ArticleDetails = () => {
   };
 
   // Handle bookmark functionality
-  const handleBookmark = () => {
-    const bookmarkedArticles = JSON.parse(localStorage.getItem('bookmarkedArticles')) || [];
-    if (isBookmarked) {
-      const updatedBookmarks = bookmarkedArticles.filter(articleId => articleId !== id);
-      localStorage.setItem('bookmarkedArticles', JSON.stringify(updatedBookmarks));
-      setIsBookmarked(false);
-    } else {
-      bookmarkedArticles.push(id);
-      localStorage.setItem('bookmarkedArticles', JSON.stringify(bookmarkedArticles));
-      setIsBookmarked(true);
+  const handleBookmark = async () => {
+    try {
+      // Send PUT request to toggle bookmark state
+      const response = await axios.put(
+        `http://localhost:8000/user/bookmarks/${id}`,
+        {}, 
+        { withCredentials: true } 
+      );
+      
+      if (response.data.success) {
+        setIsBookmarked(!isBookmarked);
+      } else {
+        alert('فشل في حفظ المقال في المفضلة');
+      }
+    } catch (err) {
+      console.error('Error bookmarking article:', err);
+      alert('فشل في حفظ المقال في المفضلة. يرجى تسجيل الدخول.');
     }
   };
 
