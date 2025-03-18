@@ -12,10 +12,12 @@ import React, { useState } from 'react';
      'الكل': [
        { id: 1, category: 'تكنولوجيا', title: 'التكنولوجيا هي أيضًا سلاح ذو حدين في الحروب الحديثة', date: '١٢ أبريل ٢٠٢١', image: 'pexels-thisisengineering-3861969.jpg', isFeatured: true },
        { id: 2, category: 'تكنولوجيا', title: 'الرسوم المتحركة الحديثة تعتمد على تقنيات الذكاء الاصطناعي', date: '١٢ أبريل ٢٠٢١', image: 'pexels-pixabay-267350.jpg' },
+       { id: 3, category: 'تكنولوجيا', title: 'الرسوم المتحركة الحديثة تعتمد على تقنيات الذكاء الاصطناعي', date: '١٢ أبريل ٢٠٢١', image: 'exploration.jpg' }
+
      ],
      'سفر': [
        { id: 5, category: 'سفر', title: 'أفضل 5 وجهات سياحية في المملكة العربية السعودية', date: '١٢ أبريل ٢٠٢١', image: '', isFeatured: true },
-       { id: 6, category: 'سفر', title: 'نصائح للسفر في الشرق الأوسط خلال فصل الصيف', date: '١٠ أبريل ٢٠٢١', image: '' },
+       { id: 6, category: 'سفر', title: 'نصائح للسفر في الشرق الأوسط خلال فصل الصيف', date: '١٠ أبريل ٢٠٢١', image: 'pexels-te-lensfix-380994-1371360.jpg' },
      ],
      'رياضة': [
        { id: 7, category: 'رياضة', title: 'الدوري السعودي يستقطب نجوم كرة القدم العالمية', date: '١٥ أبريل ٢٠٢١', image: '', isFeatured: true },
@@ -26,9 +28,9 @@ import React, { useState } from 'react';
    // Most Viewed Videos Data
    const trendingVideos = {
      today: [
-       { id: 1, title: 'وثائقي عن المساجد التاريخية في المدينة المنورة', image: '', number: 1 },
-       { id: 2, title: 'الأزمة الإقتصادية في لبنان وتداعياتها الإقليمية', image: '', number: 2 },
-       { id: 3, title: 'التطورات الأخيرة في قطاع التكنولوجيا العربية', image: '', number: 3 },
+       { id: 1, title: 'وثائقي عن المساجد التاريخية في المدينة المنورة', image: 'pexels-umaraffan499-338416.jpg', number: 1 },
+       { id: 2, title: 'الأزمة الإقتصادية في لبنان وتداعياتها الإقليمية', image: 'exploration.jpg', number: 2 },
+       { id: 3, title: 'التطورات الأخيرة في قطاع التكنولوجيا العربية', image: 'pexels-divinetechygirl-1181354.jpg', number: 3 },
      ],
      week: [
        { id: 1, title: 'تقرير خاص عن الوضع في غزة والمفاوضات الجارية', image: '', number: 1 },
