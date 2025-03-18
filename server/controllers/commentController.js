@@ -1,7 +1,6 @@
 const Comment = require("../models/Comment");
 const Article = require("../models/Article");
 
-// Add a comment to an article
 exports.addComment = async (req, res) => {
   try {
     const { content } = req.body;
@@ -20,7 +19,10 @@ exports.addComment = async (req, res) => {
     // Add the comment to the article's comments array (optional)
     await Article.findByIdAndUpdate(id, { $push: { comments: comment._id } });
 
-    res.status(201).json({ success: true, data: comment });
+    // Populate the author field to get the user's full_name
+    const populatedComment = await Comment.findById(comment._id).populate('author', 'full_name');
+
+    res.status(201).json({ success: true, data: populatedComment });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
