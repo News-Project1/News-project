@@ -3,16 +3,25 @@ require('./models');
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const connectDB = require("./config/db");
+// const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const journalistRoutes = require("./routes/journalistRoutes");
 const articleRoutes = require("./routes/articleRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
-const videoRoutes = require('./routes/videoRoutes'); // تمت إضافة Video Routes
+const connectDB = require("./config/db");
+//heba
+// const newsRoutes = require("./routes/newsRoutes");
+
+const radioRoutes = require("./routes/radioRoutes");
+
+const mostViewRoute = require("./routes/mostViewRoute");
+///////////////////////////////////
+const videoRoutes = require('./routes/videoRoutes');
+
 const adminRoutes = require('./routes/adminRoutes');
 const contactMessage = require("./routes/contactMessageRoutes");
 const paymentRoutes = require('./routes/PaymentRoutes'); // ربط الـ API بـ paymentRoutes
-const radioRoutes = require("./routes/radioRoutes");
+// const radioRoutes = require("./routes/radioRoutes");
 
 const bookmarkRoutes = require("./routes/bookMarkRoute");///////////////////////
 
@@ -48,6 +57,12 @@ app.use('/admin', adminRoutes);
 app.use("/api/radios", radioRoutes);
 app.use('/uploads', express.static('uploads'));
 
-// تشغيل الخادم
+//heba 
+// app.use("/api/news", newsRoutes);
+app.use("/api", mostViewRoute);
+app.use("/api/radios", radioRoutes);
+
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+ 

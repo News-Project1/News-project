@@ -31,7 +31,7 @@ const Navbar = () => {
     try {
       await axios.post("/api/auth/logout", {}, { withCredentials: true });
       setUser(null);
-      navigate("/login");
+      navigate("/");
     } catch (error) {
       console.error("فشل في تسجيل الخروج:", error);
     }
@@ -44,7 +44,7 @@ const Navbar = () => {
         {/* الشعار + الاسم */}
         <div className="flex items-center space-x-3">
           <img
-            src="src\loogo.png"
+            src="src/image-logoo-removebg-preview.png"
             alt="شعار الموقع"
             className="w-48 h-16 object-contain"
           />

@@ -17,7 +17,6 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
     { icon: <FaNewspaper />, label: "المقالات", path: "/" }, // Matches /journalist
     { icon: <FaChartBar />, label: "التحليلات", path: "/analytics" }, // Matches /journalist/analytics
     { icon: <FaCheckCircle />, label: "حالة المقالات", path: "/status" }, // Matches /journalist/status
-    { icon: <FaUser />, label: "الملف الشخصي", path: "/profile" }, // Matches /journalist/profile
   ];
 
   const handleLogout = async () => {
