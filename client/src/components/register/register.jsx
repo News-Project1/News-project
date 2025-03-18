@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import background_LR from "../../images/background_LR.jpg";
+import background from "../../images/background.jpeg";
 import { FcGoogle } from "react-icons/fc";
 
 const Register = () => {
@@ -15,12 +15,22 @@ const Register = () => {
     e.preventDefault();
     setError("");
     try {
-      await axios.post(
-        "http://localhost:8000/auth/signup",
+      
+      const response = await axios.post(
+        "http://localhost:8000/auth/signup", 
         { full_name, email, password },
-        { withCredentials: true }
+        { withCredentials: true }  
       );
-      navigate("/");
+      
+      const { user } = response.data;
+
+      if (user.role === "admin") {
+        navigate("/admin");
+      } else if (user.role === "journalist") {
+        navigate("/journalist");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       setError(err.response?.data?.message || "An error occurred");
     }
@@ -34,7 +44,7 @@ const Register = () => {
     <div
       className="flex justify-center items-center min-h-screen relative"
       style={{
-        backgroundImage: `url(${background_LR})`,
+        backgroundImage: `url(${background})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}

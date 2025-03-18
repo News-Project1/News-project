@@ -1,56 +1,28 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-const authenticateUser = (req, res, next) => {
+exports.isAuthenticated = (req, res, next) => {
+  // Read the token from either the cookie or the Authorization header
   let token =
-    req.cookies.authtoken ||
+    req.cookies.authToken || // Check the cookie
     (req.headers.authorization
-      ? req.headers.authorization.split(" ")[1]
+      ? req.headers.authorization.split(" ")[1] // Check the Authorization header
       : null);
 
-  console.log("Received Token:", token);
+  console.log("Token:", token); // Log the token for debugging
+  console.log("Token source:", req.cookies.authToken ? "Cookie" : "Authorization Header"); // Log the token source
 
   if (!token) {
-    return res
-      .status(401)
-      .json({ message: "Access denied. No token provided." });
+    return res.status(401).json({ message: "Access denied. No token provided." });
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("Decoded Token:", decoded); // Log the decoded token
-    // req.user = decoded;
-    const userId = decoded.id;
-
-    if (!userId) {
-      return res.status(400).json({ success: false, message: "User ID is missing" });
-    }
-    next();
-  } catch (error) {
-    console.error("JWT Verification Error:", error.message);
-    return res.status(401).json({ message: "Invalid token" });
-  }
-};
-
-const authenticateAdmin = (req, res, next) => {
-  const token = req.cookies.token;
-
-  if (!token) {
-    return res
-      .status(401)
-      .json({ message: "Access denied. No token provided." });
-  }
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (decoded.role !== "admin") {
-      return res.status(403).json({ message: "Forbidden: Admin access only." });
-    }
+    console.log("Decoded User:", decoded); // Log the decoded token for debugging
     req.user = decoded;
     next();
   } catch (error) {
+    console.error("Token verification failed:", error); // Log the error for debugging
     return res.status(401).json({ message: "Invalid token" });
   }
 };
-
-module.exports = { authenticateUser, authenticateAdmin };
