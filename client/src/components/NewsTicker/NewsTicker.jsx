@@ -261,7 +261,7 @@ export default function NewsTicker() {
   }, []);
 
   return (
-    <div className="flex items-center justify-between w-full bg-gray-900/90 backdrop-blur-sm text-white py-3 px-4 text-sm border-b border-gray-700/60 shadow-md">
+    <div className="flex items-center justify-between w-full bg-gradient-to-r from-[#213058] via-[#213058] to-[#28696A] nbg-from-[#28696A] via-[#213058] to-[#213058]backdrop-blur-sm text-white py-3 px-4 text-sm border-b border-gray-700/60 shadow-md">
       {/* شريط الأخبار */}
       <div className="flex items-center">
         <span className="text-[#F4AE3F] font-bold ml-3">آخر الأخبار</span>

@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
-import background_LR from "../../images/background_LR.jpg";
+import background from "../../images/background.jpeg";
 import { FcGoogle } from "react-icons/fc";
 
 const Login = () => {
@@ -14,12 +14,23 @@ const Login = () => {
     e.preventDefault();
     setError("");
     try {
-      await axios.post(
+      // Send login request
+      const response = await axios.post(
         "http://localhost:8000/auth/signin",
         { email, password },
         { withCredentials: true }
       );
-      navigate("/");
+  
+      const { user } = response.data;
+  
+      // Redirect based on role
+      if (user.role === "admin") {
+        navigate("/admin");
+      } else if (user.role === "journalist") {
+        navigate("/journalist");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       setError(err.response?.data?.message || "An error occurred");
     }
@@ -29,7 +40,7 @@ const Login = () => {
     <div
       className="flex justify-center items-center min-h-screen relative"
       style={{
-        backgroundImage: `url(${background_LR})`,
+        backgroundImage: `url(${background})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}

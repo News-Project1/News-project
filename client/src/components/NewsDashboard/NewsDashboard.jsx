@@ -10,31 +10,30 @@ import React, { useState } from 'react';
    // News Data
    const newsData = {
      'الكل': [
-       { id: 1, category: 'تكنولوجيا', title: 'التكنولوجيا هي أيضًا سلاح ذو حدين في الحروب الحديثة', date: '١٢ أبريل ٢٠٢١', image: '/images/tech-news.jpg', isFeatured: true },
-       { id: 2, category: 'تكنولوجيا', title: 'شاهد روبرتو كارلوس يلعب كرة القدم مع الروبوتات', date: '١٢ أبريل ٢٠٢١', image: '/images/sports-tech.jpg' },
-       { id: 3, category: 'تكنولوجيا', title: 'الرسوم المتحركة الحديثة تعتمد على تقنيات الذكاء الاصطناعي', date: '١٢ أبريل ٢٠٢١', image: '/images/ai-animation.jpg' },
+       { id: 1, category: 'تكنولوجيا', title: 'التكنولوجيا هي أيضًا سلاح ذو حدين في الحروب الحديثة', date: '١٢ أبريل ٢٠٢١', image: 'pexels-thisisengineering-3861969.jpg', isFeatured: true },
+       { id: 2, category: 'تكنولوجيا', title: 'الرسوم المتحركة الحديثة تعتمد على تقنيات الذكاء الاصطناعي', date: '١٢ أبريل ٢٠٢١', image: 'pexels-pixabay-267350.jpg' },
      ],
      'سفر': [
-       { id: 5, category: 'سفر', title: 'أفضل 5 وجهات سياحية في المملكة العربية السعودية', date: '١٢ أبريل ٢٠٢١', image: '/images/travel-saudi.jpg', isFeatured: true },
-       { id: 6, category: 'سفر', title: 'نصائح للسفر في الشرق الأوسط خلال فصل الصيف', date: '١٠ أبريل ٢٠٢١', image: '/images/summer-travel.jpg' },
+       { id: 5, category: 'سفر', title: 'أفضل 5 وجهات سياحية في المملكة العربية السعودية', date: '١٢ أبريل ٢٠٢١', image: '', isFeatured: true },
+       { id: 6, category: 'سفر', title: 'نصائح للسفر في الشرق الأوسط خلال فصل الصيف', date: '١٠ أبريل ٢٠٢١', image: '' },
      ],
      'رياضة': [
-       { id: 7, category: 'رياضة', title: 'الدوري السعودي يستقطب نجوم كرة القدم العالمية', date: '١٥ أبريل ٢٠٢١', image: '/images/saudi-league.jpg', isFeatured: true },
-       { id: 8, category: 'رياضة', title: 'منتخب مصر يستعد للتصفيات المؤهلة لكأس العالم', date: '١٤ أبريل ٢٠٢١', image: '/images/egypt-team.jpg' },
+       { id: 7, category: 'رياضة', title: 'الدوري السعودي يستقطب نجوم كرة القدم العالمية', date: '١٥ أبريل ٢٠٢١', image: '', isFeatured: true },
+       { id: 8, category: 'رياضة', title: 'منتخب مصر يستعد للتصفيات المؤهلة لكأس العالم', date: '١٤ أبريل ٢٠٢١', image: '' },
      ],
    };
  
    // Most Viewed Videos Data
    const trendingVideos = {
      today: [
-       { id: 1, title: 'وثائقي عن المساجد التاريخية في المدينة المنورة', image: '/images/madinah-mosques.jpg', number: 1 },
-       { id: 2, title: 'الأزمة الإقتصادية في لبنان وتداعياتها الإقليمية', image: '/images/lebanon-economy.jpg', number: 2 },
-       { id: 3, title: 'التطورات الأخيرة في قطاع التكنولوجيا العربية', image: '/images/arab-tech.jpg', number: 3 },
+       { id: 1, title: 'وثائقي عن المساجد التاريخية في المدينة المنورة', image: '', number: 1 },
+       { id: 2, title: 'الأزمة الإقتصادية في لبنان وتداعياتها الإقليمية', image: '', number: 2 },
+       { id: 3, title: 'التطورات الأخيرة في قطاع التكنولوجيا العربية', image: '', number: 3 },
      ],
      week: [
-       { id: 1, title: 'تقرير خاص عن الوضع في غزة والمفاوضات الجارية', image: '/images/gaza-report.jpg', number: 1 },
-       { id: 2, title: 'السياحة الصحراوية في المملكة العربية السعودية', image: '/images/desert-tourism.jpg', number: 2 },
-       { id: 3, title: 'الإنجازات العلمية العربية في مجال الفضاء', image: '/images/arab-space.jpg', number: 3 },
+       { id: 1, title: 'تقرير خاص عن الوضع في غزة والمفاوضات الجارية', image: '', number: 1 },
+       { id: 2, title: 'السياحة الصحراوية في المملكة العربية السعودية', image:'', number: 2 },
+       { id: 3, title: 'الإنجازات العلمية العربية في مجال الفضاء', image: '', number: 3 },
      ],
    };
  

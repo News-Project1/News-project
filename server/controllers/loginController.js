@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const dotenv = require("dotenv");
+const mongoose = require('mongoose');
 
 dotenv.config();
 
@@ -75,7 +76,7 @@ exports.logoutUser = (req, res) => {
 exports.getUserProfile = async (req, res) => {
   try {
     // Extract token from req.body or cookies
-    const token = req.body.token || req.cookies.token;
+    const token = req.body.token || req.cookies.authToken;
 
     if (!token) {
       return res.status(401).json({ message: "No token provided" });
@@ -84,26 +85,25 @@ exports.getUserProfile = async (req, res) => {
     // Verify and decode token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    console.log("Decoded User ID from token:", decoded.userId);
+    console.log("Decoded User ID from token:", decoded._id);  // Use _id instead of userId
 
     // Validate user ID
-    if (!decoded.userId || !mongoose.Types.ObjectId.isValid(decoded.userId)) {
+    if (!decoded._id || !mongoose.Types.ObjectId.isValid(decoded._id)) {  // Use _id here as well
       return res.status(400).json({ message: "Invalid user ID" });
     }
 
     // Fetch user profile from database
-    const user = await User.findById(decoded.userId).select("-password");
+    const user = await User.findById(decoded._id).select("-password");  // Use _id here too
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res
-      .status(200)
-      .json({ user, message: "User profile fetched successfully" });
+    res.status(200).json({ user, message: "User profile fetched successfully" });
   } catch (error) {
     console.error("Error fetching user profile:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 

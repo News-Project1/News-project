@@ -24,9 +24,9 @@ const ReportsSection = () => {
   
   const handleStatusChange = async (reportId, newStatus) => {
     try {
-      const response = await axios.put(`http://localhost:8000/admin/reports/${reportId}`, {withCredentials: true},{
+      const response = await axios.put(`http://localhost:8000/admin/reports/${reportId}/status`,{
         status: newStatus,
-      });
+      },{ withCredentials: true });
       setReports((prevReports) =>
         prevReports.map((report) =>
           report._id === reportId ? { ...report, status: response.data.status } : report
