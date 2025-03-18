@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-
 exports.isAuthenticated = (req, res, next) => {
   // Read the token from either the cookie or the Authorization header
   let token =

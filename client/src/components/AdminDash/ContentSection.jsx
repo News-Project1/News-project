@@ -7,12 +7,14 @@ const ContentSection = ({ articles, totalArticles, currentPage, totalPages, onSt
 
   const handleSearch = (term) => {
     setSearchTerm(term);
-    onSearch(term); // تمرير قيمة البحث إلى Admin
+    onSearch(term); // تمرير قيمة البحث إلى المكون الأب
   };
 
   const handlePageChange = (newPage) => {
+    console.log('Changing to page:', newPage); 
     if (newPage >= 1 && newPage <= totalPages) {
       onPageChange(newPage);
+      console.log(onPageChange(newPage));
     }
   };
 

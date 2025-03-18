@@ -53,7 +53,7 @@ const CommentsSection = () => {
     try {
       const response = await axios.put(`${API_BASE_URL}/comments/${commentId}/status`, {
         status: newStatus === "مرئي" ? "visible" : newStatus === "مخفي" ? "hidden" : "reported",
-      });
+      },{ withCredentials: true });
       setComments((prevComments) =>
         prevComments.map((comment) =>
           comment.id === commentId
