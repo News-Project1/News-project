@@ -336,3 +336,40 @@ exports.getAnalytics = async (req, res) => {
   }
 };
 
+// جلب بيانات المستخدم
+exports.getAdminProfile = (req, res) => {
+  const user = req.user; // من isAuthenticated
+  res.json({
+    name: user.name || 'مدير النظام', // قيم افتراضية إذا لم تكن موجودة
+    email: user.email,
+    avatar: user.avatar || '',
+    role: user.role,
+    twoFactorEnabled: user.twoFactorEnabled || false,
+    notificationsEnabled: user.notificationsEnabled || false,
+  });
+};
+
+// تحديث بيانات المستخدم
+exports.updateProfile = async (req, res) => {
+  const { name, email, twoFactorEnabled, notificationsEnabled, emailNotifications, systemAlerts } = req.body;
+  const avatar = req.file ? `/uploads/${req.file.filename}` : req.user.avatar;
+
+  try {
+    const updatedUser = {
+      name,
+      email,
+      avatar,
+      twoFactorEnabled: twoFactorEnabled === 'true',
+      notificationsEnabled: notificationsEnabled === 'true',
+      emailNotifications: emailNotifications === 'true',
+      systemAlerts: systemAlerts === 'true',
+    };
+    // هنا يمكنك إضافة منطق لتحديث قاعدة البيانات، مثال:
+    // await User.findByIdAndUpdate(req.user.id, updatedUser);
+    console.log('تم تحديث المستخدم:', updatedUser);
+    res.json(updatedUser);
+  } catch (error) {
+    console.error('Update Profile Error:', error);
+    res.status(500).json({ message: 'فشل في تحديث الملف الشخصي' });
+  }
+};

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
@@ -26,8 +25,10 @@ import {
   LogOut,
 } from "lucide-react";
 import axios from "axios";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
+
 
 const Admin = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -42,24 +43,30 @@ const Admin = () => {
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+ const navigate = useNavigate()
   const API_BASE_URL = "http://localhost:8000/admin";
-  const LIMIT = 10; // عدد المقالات في كل صفحة
+  const LIMIT = 10;
 
   const fetchArticles = async (page = 1, search = '') => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_BASE_URL}/articles`,{withCredentials: true} ,{
-        params: { page, limit: LIMIT, search }
+      const url = `${API_BASE_URL}/articles?page=${page}&limit=${LIMIT}&search=${search}`;
+      console.log('Fetching articles from:', url);
+
+      const response = await axios.get(url, {
+        withCredentials: true,
       });
+
+      console.log('API Response:', response.data);
+
       const { articles: fetchedArticles, totalArticles, currentPage, totalPages } = response.data;
 
       const formattedArticles = fetchedArticles.map(article => ({
         ...article,
         id: article._id,
         date: article.publishDate ? new Date(article.publishDate).toLocaleDateString('ar-EG') : 'غير محدد',
-        author: article.author && typeof article.author === 'object' 
-          ? (article.author.full_name || article.author.username || 'غير معروف') 
+        author: article.author && typeof article.author === 'object'
+          ? (article.author.full_name || article.author.username || 'غير معروف')
           : 'غير معروف',
         status: article.status === 'published' ? 'منشور' : article.status === 'pending' ? 'قيد الانتظار' : 'مرفوض'
       }));
@@ -68,36 +75,42 @@ const Admin = () => {
       setTotalArticles(totalArticles);
       setCurrentPage(currentPage);
       setTotalPages(totalPages);
+      console.log('State updated:', { articles: formattedArticles, totalArticles, currentPage, totalPages });
     } catch (err) {
-      setError("فشل في جلب البيانات من الخادم. يرجى المحاولة لاحقًا.");
-      console.error(err);
+      setError("فشل في جلب المقالات من الخادم.");
+      console.error('Fetch Articles Error:', err.response ? err.response.data : err.message);
     } finally {
       setLoading(false);
     }
   };
 
+  const fetchAdditionalData = async () => {
+    try {
+      const [commentsRes, journalistsRes, reportsRes, analyticsRes] = await Promise.all([
+        axios.get(`${API_BASE_URL}/comments`, { withCredentials: true }),
+        axios.get(`${API_BASE_URL}/users`, { withCredentials: true }),
+        axios.get(`${API_BASE_URL}/reports`, { withCredentials: true }),
+        axios.get(`${API_BASE_URL}/analytics`, { withCredentials: true }),
+      ]);
+
+      setComments(commentsRes.data);
+      setJournalists(journalistsRes.data.filter(user => user.role === "journalist"));
+      setReports(reportsRes.data);
+      setAnalytics(analyticsRes.data);
+    } catch (err) {
+      setError("فشل في جلب البيانات الإضافية.");
+      console.error('Fetch Additional Data Error:', err.response ? err.response.data : err.message);
+    }
+  };
+
+  // جلب المقالات عند تغيير الصفحة أو البحث
   useEffect(() => {
-    const fetchData = async () => {
-      await fetchArticles(1, searchTerm); // جلب الصفحة الأولى عند التحميل
-      try {
-        const [commentsRes, journalistsRes, reportsRes, analyticsRes] = await Promise.all([
-          axios.get(`${API_BASE_URL}/comments`, {withCredentials: true}),
-          axios.get(`${API_BASE_URL}/users`,{withCredentials: true}),
-          axios.get(`${API_BASE_URL}/reports`,{withCredentials: true}),
-          axios.get(`${API_BASE_URL}/analytics`,{withCredentials: true}),
-        ]);
+    fetchArticles(currentPage, searchTerm);
+  }, [currentPage, searchTerm]);
 
-        setComments(commentsRes.data);
-        setJournalists(journalistsRes.data.filter(user => user.role === "journalist"));
-        setReports(reportsRes.data);
-        setAnalytics(analyticsRes.data);
-      } catch (err) {
-        setError("فشل في جلب البيانات الإضافية.");
-        console.error(err);
-      }
-    };
-
-    fetchData();
+  // جلب البيانات الإضافية مرة واحدة عند التحميل
+  useEffect(() => {
+    fetchAdditionalData();
   }, []);
 
   const handleStatusUpdate = (articleId, newStatus, updatedArticle) => {
@@ -109,15 +122,22 @@ const Admin = () => {
               ...updatedArticle,
               status: updatedArticle.status === 'published' ? 'منشور' : updatedArticle.status === 'pending' ? 'قيد الانتظار' : 'مرفوض',
               date: updatedArticle.publishDate ? new Date(updatedArticle.publishDate).toLocaleDateString('ar-EG') : 'غير محدد',
-              author: updatedArticle.author && typeof updatedArticle.author === 'object' 
-                ? (updatedArticle.author.full_name || updatedArticle.author.username || 'غير معروف') 
+              author: updatedArticle.author && typeof updatedArticle.author === 'object'
+                ? (updatedArticle.author.full_name || updatedArticle.author.username || 'غير معروف')
                 : 'غير معروف'
             }
           : article
       )
     );
   };
-
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:8000/auth/logout", {}, { withCredentials: true });
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
   const handleArticleUpdate = (articleId, updatedArticle) => {
     setArticles(prevArticles =>
       prevArticles.map(article =>
@@ -127,8 +147,8 @@ const Admin = () => {
               ...updatedArticle,
               status: updatedArticle.status === 'published' ? 'منشور' : updatedArticle.status === 'pending' ? 'قيد الانتظار' : 'مرفوض',
               date: updatedArticle.publishDate ? new Date(updatedArticle.publishDate).toLocaleDateString('ar-EG') : 'غير محدد',
-              author: updatedArticle.author && typeof updatedArticle.author === 'object' 
-                ? (updatedArticle.author.full_name || updatedArticle.author.username || 'غير معروف') 
+              author: updatedArticle.author && typeof updatedArticle.author === 'object'
+                ? (updatedArticle.author.full_name || updatedArticle.author.username || 'غير معروف')
                 : 'غير معروف'
             }
           : article
@@ -138,19 +158,21 @@ const Admin = () => {
 
   const handleArticleDelete = (articleId) => {
     setArticles(prevArticles => prevArticles.filter(article => (article.id || article._id) !== articleId));
-    setTotalArticles(prev => prev - 1); // تحديث العدد الكلي
+    setTotalArticles(prev => prev - 1);
     if (articles.length === 1 && currentPage > 1) {
-      fetchArticles(currentPage - 1, searchTerm); // إذا أصبحت الصفحة فارغة، انتقل للصفحة السابقة
+      setCurrentPage(currentPage - 1); // الانتقال للصفحة السابقة إذا أصبحت الصفحة فارغة
     }
   };
 
   const handlePageChange = (newPage) => {
-    fetchArticles(newPage, searchTerm);
+    console.log('handlePageChange triggered:', { newPage, searchTerm });
+    setCurrentPage(newPage); // تحديث الصفحة الحالية لتفعيل useEffect
   };
 
   const handleSearch = (term) => {
+    console.log('Search term updated:', term);
     setSearchTerm(term);
-    fetchArticles(1, term); 
+    setCurrentPage(1); // إعادة تعيين الصفحة إلى 1 عند البحث
   };
 
   const adminProfile = {
@@ -181,23 +203,16 @@ const Admin = () => {
       id: "logout",
       label: "تسجيل الخروج",
       icon: <LogOut size={20} />,
-      onClick: () => {
-        toast.success("تم تسجيل الخروج بنجاح!", { autoClose: 2000 });
-      },
+      onClick: () => {toast.success("تم تسجيل الخروج بنجاح!", { autoClose: 2000 }),handleLogout()}
     },
   ];
 
   const renderContent = () => {
-    if (loading) {
-      return <div className="text-center p-6">جارٍ التحميل...</div>;
-    }
-    if (error) {
-      return <div className="text-center p-6 text-red-600">{error}</div>;
-    }
+    if (loading) return <div className="text-center p-6">جارٍ التحميل...</div>;
+    if (error) return <div className="text-center p-6 text-red-600">{error}</div>;
 
     switch (activeTab) {
-      case "overview":
-        return <OverviewSection />;
+      case "overview": return <OverviewSection />;
       case "content":
         return (
           <ContentSection 
@@ -212,34 +227,21 @@ const Admin = () => {
             onSearch={handleSearch}
           />
         );
-      case "journalists":
-        return <JournalistsSection journalists={journalists} />;
-      case "comments":
-        return <CommentsSection/>;
-      case 'reports':
-        return <ReportsSection />;
-      case 'videos':
-        return <VideosSection />;
-      case 'users':
-        return <UsersSection/>;
-      case "analytics":
-        return <AnalyticsSection/>;
-      case "trending":
-        return <TrendingSection/>;
-      case "settings":
-        return <SettingsSection userProfile={adminProfile} />;
-      default:
-        return null;
+      case "journalists": return <JournalistsSection journalists={journalists} />;
+      case "comments": return <CommentsSection />;
+      case "reports": return <ReportsSection  />;
+      case "videos": return <VideosSection />;
+      case "users": return <UsersSection />;
+      case "analytics": return <AnalyticsSection analytics={analytics} />;
+      case "trending": return <TrendingSection />;
+      case "settings": return <SettingsSection userProfile={adminProfile} />;
+      default: return null;
     }
   };
 
   return (
     <div className="flex min-h-screen bg-gray-100" dir="rtl">
-      <Sidebar
-        navItems={navItems}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-      />
+      <Sidebar navItems={navItems} activeTab={activeTab} setActiveTab={setActiveTab} />
       <div className="flex-1 p-6">
         <Header activeTab={activeTab} navItems={navItems} />
         {renderContent()}

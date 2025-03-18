@@ -51,46 +51,9 @@ const JournalistsSection = ({ journalists }) => {
         </div>
       </div>
 
-      <div>
-        <h4 className="font-medium mb-2">الصحفيون النشطون</h4>
-        <div className="flex justify-between items-center mb-2">
-          <div className="flex space-x-2">
-            <input
-              type="text"
-              placeholder="ابحث عن الصحفيين..."
-              className="border rounded px-3 py-1 text-sm"
-            />
-            <select className="border rounded px-3 py-1 text-sm">
-              <option>جميع التخصصات</option>
-              <option>سياسة</option>
-              <option>تكنولوجيا</option>
-              <option>رياضة</option>
-            </select>
-          </div>
-        </div>
+     
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <JournalistCard
-            name="جين سميث"
-            specialty="محررة سياسة"
-            articles={87}
-            joined="15 يناير 2023"
-          />
-          <JournalistCard
-            name="جون دو"
-            specialty="كاتب تكنولوجيا"
-            articles={42}
-            joined="22 مارس 2024"
-          />
-          <JournalistCard
-            name="أليكس جونسون"
-            specialty="مراسل بيئي"
-            articles={65}
-            joined="5 سبتمبر 2023"
-          />
-        </div>
-      </div>
-    </div>
+</div>
   );
 };
 

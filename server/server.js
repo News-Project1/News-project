@@ -46,7 +46,7 @@ app.use("/api/journalist", journalistRoutes);
 app.use("/api/videos", videoRoutes); // تمت إضافة Video Routes
 app.use('/admin', adminRoutes);
 app.use("/api/radios", radioRoutes);
-
+app.use('/uploads', express.static('uploads'));
 
 // تشغيل الخادم
 const PORT = process.env.PORT || 5000;
