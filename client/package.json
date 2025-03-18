@@ -33,6 +33,7 @@
     "sudoku": "^0.0.3",
     "sudoku-gen": "^1.0.2",
     "sudoku-puzzle": "^1.0.1",
+    "sweetalert2": "^11.17.2",
     "tailwindcss-rtl": "^0.9.0"
   },
   "devDependencies": {
