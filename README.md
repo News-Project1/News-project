@@ -12,7 +12,7 @@ Here’s the lowdown on what you can expect:
 
 #### ✍️ **News & Content Management** 
 - **Journalists** can write, edit, and publish articles like a pro 📝.
-- Add **multimedia** (images, videos) to bring your stories to life 🎥📸.
+- Add **multimedia** (images) to bring your stories to life 📸.
 - **Admins** have the power to review and approve articles before they hit the homepage ✨.
 
 #### 🌟 **User Engagement** 
@@ -27,7 +27,6 @@ Here’s the lowdown on what you can expect:
 - Personalized recommendations based on what you’ve read. 👀
 
 #### 🖼️ **Multimedia Support** 
-- Upload your images and videos directly within articles. Perfect for **photojournalism** 📸.
 - Embed **social media** posts from Twitter, Instagram, and more! 📱
 
 #### 🛠️ **Admin Dashboard** 
@@ -50,7 +49,7 @@ Here’s the lowdown on what you can expect:
 ### 🎯 **Additional Cool Features**
 
 - **Subscription Model**: Unlock **exclusive** content and enjoy the experience. 💳
-- **Live News Updates**: Get breaking news in **real-time** with WebSockets. ⚡
+- **Live News Updates**: Get breaking news in **real-time** ⚡
 - **Newsletter System**: Stay updated with **personalized** top stories in your inbox! 📧
 
 ## 🛠️ **Tech Stack That Powers مشهد**
