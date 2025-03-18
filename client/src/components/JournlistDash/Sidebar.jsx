@@ -14,9 +14,9 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
   const navigate = useNavigate();
 
   const menuItems = [
-    { icon: <FaNewspaper />, label: "المقالات", path: "/" }, // Matches /journalist
-    { icon: <FaChartBar />, label: "التحليلات", path: "/analytics" }, // Matches /journalist/analytics
-    { icon: <FaCheckCircle />, label: "حالة المقالات", path: "/status" }, // Matches /journalist/status
+    { icon: <FaNewspaper />, label: "المقالات", path: "/" }, 
+    { icon: <FaChartBar />, label: "التحليلات", path: "/analytics" }, 
+    { icon: <FaCheckCircle />, label: "حالة المقالات", path: "/status" }, 
   ];
 
   const handleLogout = async () => {
@@ -37,7 +37,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
           transform transition-transform duration-300 ease-in-out
           ${isSidebarOpen ? "translate-x-0" : "translate-x-full sm:translate-x-0"} // Slide in from the right for RTL
         `}
-      dir="rtl" // Ensure RTL text direction
+      dir="rtl" 
     >
       {/* Header / Logo */}
       <div className="p-4 sm:p-6 border-b border-gray-700 flex items-center justify-between">
@@ -59,7 +59,7 @@ export default function Sidebar({ isSidebarOpen, toggleSidebar }) {
           {menuItems.map((item) => (
             <li key={item.label}>
               <Link
-                to={`/journalist${item.path}`} // Absolute path relative to /journalist
+                to={`/journalist${item.path}`} 
                 className="flex items-center px-3 py-2 sm:px-4 sm:py-3 rounded-lg text-white transition-all duration-300 group hover:bg-gray-700 hover:text-white"
                 onClick={toggleSidebar}
               >
