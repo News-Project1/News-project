@@ -46,13 +46,13 @@ const games = [
   {
     title: "سودوكو",
     description: "لعبة سودوكو تنشر يوميًا لمحبي ألغاز الأرقام.",
-    icon: "📊", // يمكنك استبدالها بأيقونة SVG أو صورة
+    // icon: "📊", // يمكنك استبدالها بأيقونة SVG أو صورة
     path: "/sudoku", // رابط اللعبة
   },
   {
-    title: "الكلمات المتقاطعة",
-    description: "اختر قاموسك اللغوي مع لعبة الكلمات المتقاطعة يوميًا.",
-    icon: "✏️", // يمكنك استبدالها بأيقونة SVG أو صورة
+    title: "سولتير ",
+    description: "استمتع معنا مع لعبة سولتير  لمحبين العاب الاوراق .",
+    // icon: "✏️", // يمكنك استبدالها بأيقونة SVG أو صورة
     path: "/cutwordgame", // رابط اللعبة
   },
 ];
@@ -68,18 +68,18 @@ const GamesSection = () => {
           {games.map((game, index) => (
             <div
               key={index}
-              className="bg-white shadow-md rounded-lg p-6 flex flex-col items-center text-center"
+              className="bg-gradient-to-r from-[#28696A] via-[#213058] to-[#213058] shadow-md rounded-lg p-6 flex flex-col items-center text-center"
             >
               <div className="text-5xl mb-4">{game.icon}</div>
-              <h3 className="text-xl font-bold">{game.title}</h3>
-              <p className="text-gray-600 mb-4">{game.description}</p>
+              <h3 className=" text-amber-50 text-xl font-bold">{game.title}</h3>
+              <p className="text-amber-300 m-5">{game.description}</p>
               
               {/* زر التوجه إلى صفحة اللعبة */}
               <button
                 onClick={() => navigate(game.path)}
-                className="mt-2 px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-500 transition"
+                className="mt-2 px-6 py-2 bg-[#F4AE3F] text-white rounded-lg shadow hover:bg-blue-500 transition"
               >
-                🎮 العب الآن
+                العب الآن
               </button>
             </div>
           ))}

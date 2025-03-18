@@ -14,6 +14,7 @@ import React, { useState, useEffect } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { motion } from "framer-motion";
+import NewsTicker from "../NewsTicker/NewsTicker"
 
 const suits = ["hearts", "diamonds", "clubs", "spades"];
 const values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
@@ -107,9 +108,24 @@ const CutWordGame= () => {
   };
 
   return (
+        <div>
+        
     <DndProvider backend={HTML5Backend}>
+    <NewsTicker />
+      {/* تعليمات اللعب */}
+      <div className="text-center mt-4 text-lg font-bold">
+        <p>كيفية اللعب:</p>
+        <ul className="list-disc list-inside">
+          <li>اسحب البطاقة من الأعمدة وضعها في الأساسيات.</li>
+          <li>يمكنك فقط سحب البطاقات المقلوبة من الأعمدة.</li>
+          <li>ضع البطاقات في الأساسيات حسب القيمة والترتيب الصحيح (من A إلى K).</li>
+          <li>لإعادة اللعبة، اضغط على زر "Restart Game".</li>
+        </ul>
+      </div>
       <div className="flex justify-center gap-8 p-8">
+        
         {/* الأساسيات */}
+        
         <div className="flex gap-2">
           {foundations.map((foundation, index) => (
             <div key={index} className="w-20 h-32 bg-green-200 border-2 border-gray-500 rounded-lg p-2">
@@ -132,24 +148,16 @@ const CutWordGame= () => {
         ))}
       </div>
 
-      {/* تعليمات اللعب */}
-      <div className="text-center mt-4 text-lg font-bold">
-        <p>كيفية اللعب:</p>
-        <ul className="list-disc list-inside">
-          <li>اسحب البطاقة من الأعمدة وضعها في الأساسيات.</li>
-          <li>يمكنك فقط سحب البطاقات المقلوبة من الأعمدة.</li>
-          <li>ضع البطاقات في الأساسيات حسب القيمة والترتيب الصحيح (من A إلى K).</li>
-          <li>لإعادة اللعبة، اضغط على زر "Restart Game".</li>
-        </ul>
-      </div>
+   
 
       <button
-        className="mt-4 px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 transition duration-300"
+        className="m-11 px-9 py-2 bg-[#F4AE3F] text-white font-semibold rounded-lg shadow-lg hover:bg-[#ddb473] transition duration-300"
         onClick={handleRestart}
       >
         Restart Game
       </button>
     </DndProvider>
+    </div>
   );
 };
 
