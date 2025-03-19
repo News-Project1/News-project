@@ -45,34 +45,34 @@ const ArticleDetails = () => {
   }, [id]);
 
   
-const handleLike = async () => {
-  try {
-    // Send POST request to like/unlike the article
-    const response = await axios.post(
-      `http://localhost:8000/api/articles/${id}/like`,
-      {},
-      { withCredentials: true }
-    );
-
-    if (response.data.success) {
-      // Update likes count and toggle like state
-      setLikes(response.data.data.likes);
-      setIsLiked(!isLiked);
-
+  const handleLike = async () => {
+    try {
+      // Send POST request to like/unlike the article
+      const response = await axios.post(
+        `http://localhost:8000/api/articles/${id}/like`,
+        {},
+        { withCredentials: true }
+      );
+  
+      if (response.data.success) {
+        // Update likes count and toggle like state
+        setLikes(response.data.data.likes);
+        setIsLiked(!isLiked);
+  
+      }
+    } catch (err) {
+      console.error('Error liking article:', err);
+  
+      // Check if the error is due to unauthorized access (not logged in)
+      if (err.response && err.response.status === 401) {
+        Swal.fire({
+          icon: 'error',
+          title: 'غير مسموح',
+          text: 'يرجى تسجيل الدخول لتتمكن من الإعجاب بالمقال.',
+        });
+      } 
     }
-  } catch (err) {
-    console.error('Error liking article:', err);
-
-    // Check if the error is due to unauthorized access (not logged in)
-    if (err.response && err.response.status === 401) {
-      Swal.fire({
-        icon: 'error',
-        title: 'غير مسموح',
-        text: 'يرجى تسجيل الدخول لتتمكن من الإعجاب بالمقال.',
-      });
-    } 
-  }
-};
+  };
   
 
   // Handle comment submission

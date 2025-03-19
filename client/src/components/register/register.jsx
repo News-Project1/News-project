@@ -15,24 +15,17 @@ const Register = () => {
     e.preventDefault();
     setError("");
     try {
-      
       const response = await axios.post(
-        "http://localhost:8000/auth/signup", 
+        "http://localhost:8000/auth/signup",
         { full_name, email, password },
-        { withCredentials: true }  
+        { withCredentials: true }
       );
-      
       const { user } = response.data;
-
-      if (user.role === "admin") {
-        navigate("/admin");
-      } else if (user.role === "journalist") {
-        navigate("/journalist");
-      } else {
-        navigate("/");
-      }
+      if (user.role === "admin") navigate("/admin");
+      else if (user.role === "journalist") navigate("/journalist");
+      else navigate("/");
     } catch (err) {
-      setError(err.response?.data?.message || "An error occurred");
+      setError(err.response?.data?.message || "حدث خطأ ما");
     }
   };
 
@@ -51,7 +44,7 @@ const Register = () => {
     >
       <div className="relative w-96 bg-white/10 backdrop-blur-md shadow-lg rounded-xl p-8">
         <h2 className="text-2xl font-bold text-center text-white mb-5">
-          Sign Up
+          إنشاء حساب
         </h2>
         {error && <p className="text-red-500 text-center">{error}</p>}
         <form onSubmit={handleSubmit} className="w-full text-white">
@@ -62,7 +55,7 @@ const Register = () => {
               value={full_name}
               onChange={(e) => setName(e.target.value)}
               className="w-full bg-transparent border border-white rounded-lg px-4 py-2 text-white focus:outline-none"
-              placeholder="Name"
+              placeholder="الاسم"
             />
           </div>
           <div className="relative mb-4">
@@ -72,7 +65,7 @@ const Register = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full bg-transparent border border-white rounded-lg px-4 py-2 text-white focus:outline-none"
-              placeholder="Email"
+              placeholder="البريد الإلكتروني"
             />
           </div>
           <div className="relative mb-4">
@@ -82,29 +75,29 @@ const Register = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full bg-transparent border border-white rounded-lg px-4 py-2 text-white focus:outline-none"
-              placeholder="Password"
+              placeholder="كلمة المرور"
             />
           </div>
           <button
             type="submit"
             className="w-full py-2 bg-[#1e293b] text-white font-medium rounded-lg shadow-md hover:bg-[#1e251b]"
           >
-            Sign Up
+            إنشاء حساب
           </button>
           <button
             type="button"
             onClick={handleGoogleLogin}
-            className="w-full flex items-center justify-center gap-2 py-2 mt-4 bg-white text-[#1e293b] bg-[#cecab3] font-medium rounded-lg shadow-md "
+            className="w-full flex items-center justify-center gap-2 py-2 mt-4 bg-white text-[#1e293b] font-medium rounded-lg shadow-md hover:bg-gray-200"
           >
-            <FcGoogle size={24} /> Login with Google
+            <FcGoogle size={24} /> تسجيل الدخول عبر جوجل
           </button>
           <p className="text-center mt-4 text-white">
-            Already have an account?{" "}
+            هل لديك حساب بالفعل؟{" "}
             <Link
               to="/login"
               className="text-[#1e293b] font-semibold hover:text-[#1e251b]"
             >
-              Sign In
+              تسجيل الدخول
             </Link>
           </p>
         </form>
