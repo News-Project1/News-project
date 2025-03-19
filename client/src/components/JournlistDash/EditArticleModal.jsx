@@ -1,266 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import axios from "axios";
-
-// const EditArticleModal = ({ isOpen, onClose, article, onArticleUpdated }) => {
-//   const [formData, setFormData] = useState({
-//     title: "",
-//     content: "",
-//     featuredImage: null,
-//     media: [],
-//     categoryIds: [],
-//     tags: "",
-//   });
-//   const [categories, setCategories] = useState([]);
-//   const [loading, setLoading] = useState(false);
-//   const [error, setError] = useState("");
-
-//   // Reset form data when the modal is closed or a new article is selected
-//   useEffect(() => {
-//     if (isOpen && article) {
-//       setFormData({
-//         title: article.title,
-//         content: article.content,
-//         featuredImage: null, // Reset featured image file
-//         media: [], // Reset media files
-//         categoryIds: article.categoryIds.map((category) => category._id), // Pre-select categories
-//         tags: article.tags.join(","), // Convert tags array to a comma-separated string
-//       });
-//     }
-//   }, [isOpen, article]);
-
-//   // Fetch categories when the modal opens
-//   useEffect(() => {
-//     if (isOpen) {
-//       axios
-//         .get("http://localhost:8000/api/categories", { withCredentials: true })
-//         .then((response) => {
-//           setCategories(response.data);
-//         })
-//         .catch((error) => {
-//           console.error("Error fetching categories:", error);
-//           setError("Failed to fetch categories. Please try again later.");
-//         });
-//     }
-//   }, [isOpen]);
-
-//   // Handle form input changes
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData((prevData) => ({
-//       ...prevData,
-//       [name]: value,
-//     }));
-//   };
-
-//   // Handle featured image file change
-//   const handleFeaturedImageChange = (e) => {
-//     const file = e.target.files[0];
-//     setFormData((prevData) => ({
-//       ...prevData,
-//       featuredImage: file,
-//     }));
-//   };
-
-//   // Handle media files change
-//   const handleMediaChange = (e) => {
-//     const files = Array.from(e.target.files);
-//     setFormData((prevData) => ({
-//       ...prevData,
-//       media: files,
-//     }));
-//   };
-
-//   // Handle category selection changes
-//   const handleCategoryChange = (e) => {
-//     const selectedCategoryId = e.target.value;
-//     setFormData((prevData) => ({
-//       ...prevData,
-//       categoryIds: [selectedCategoryId], // Store only one category ID
-//     }));
-//   };
-
-//   // Handle tags input changes
-//   const handleTagsChange = (value) => {
-//     setFormData((prevData) => ({
-//       ...prevData,
-//       tags: value,
-//     }));
-//   };
-
-//   // Handle form submission
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     setLoading(true);
-//     setError("");
-
-//     try {
-//       const formDataToSend = new FormData();
-//       formDataToSend.append("title", formData.title);
-//       formDataToSend.append("content", formData.content);
-//       formDataToSend.append("categoryIds", formData.categoryIds[0]);
-
-//       const tagsArray = formData.tags
-//         .split(",")
-//         .map((tag) => tag.trim())
-//         .filter((tag) => tag !== "");
-//       tagsArray.forEach((tag) => {
-//         formDataToSend.append("tags", tag);
-//       });
-
-//       if (formData.featuredImage) {
-//         console.log("Featured Image:", formData.featuredImage);
-//         formDataToSend.append("featuredImage", formData.featuredImage);
-//       }
-
-//       if (formData.media.length > 0) {
-//         console.log("Media Files:", formData.media);
-//         formData.media.forEach((file) => {
-//           formDataToSend.append("media", file);
-//         });
-//       }
-//         // Log the FormData object
-//         for (let [key, value] of formDataToSend.entries()) {
-//             console.log(key, value);
-//         }
-
-//       const response = await axios.put(
-//         `http://localhost:8000/api/journalist/articles/${article._id}`,
-//         formDataToSend,
-//         {
-//           headers: {
-//             "Content-Type": "multipart/form-data",
-//           },
-//           withCredentials: true,
-//         }
-//       );
-//      console.log("Update Response:", response.data);
-//       onArticleUpdated(response.data);
-//       onClose();
-//     } catch (error) {
-//       console.error("Error updating article:", error);
-//       setError("فشل في تحديث المقال. يرجى المحاولة مرة أخرى.");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   if (!isOpen) return null;
-
-//   return (
-//     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-//       <div className="bg-white rounded-lg p-6 w-full max-w-md">
-//         <h2 className="text-xl font-bold mb-4">تعديل المقال</h2>
-//         <form onSubmit={handleSubmit} encType="multipart/form-data">
-//           {/* Title */}
-//           <div className="mb-4">
-//             <label className="block text-sm font-medium mb-1">العنوان</label>
-//             <input
-//               type="text"
-//               name="title"
-//               value={formData.title}
-//               onChange={handleChange}
-//               className="w-full p-2 border border-gray-300 rounded-md"
-//               required
-//             />
-//           </div>
-
-//           {/* Content */}
-//           <div className="mb-4">
-//             <label className="block text-sm font-medium mb-1">المحتوى</label>
-//             <textarea
-//               name="content"
-//               value={formData.content}
-//               onChange={handleChange}
-//               className="w-full p-2 border border-gray-300 rounded-md"
-//               rows="4"
-//               required
-//             />
-//           </div>
-
-//           {/* Featured Image */}
-//           <div className="mb-4">
-//             <label className="block text-sm font-medium mb-1">الصورة الرئيسية</label>
-//             <input
-//               type="file"
-//               name="featuredImage"
-//               onChange={handleFeaturedImageChange}
-//               className="w-full p-2 border border-gray-300 rounded-md"
-//               accept="image/*"
-//             />
-//           </div>
-
-//           {/* Media Files */}
-//           <div className="mb-4">
-//             <label className="block text-sm font-medium mb-1">الوسائط</label>
-//             <input
-//               type="file"
-//               name="media"
-//               onChange={handleMediaChange}
-//               className="w-full p-2 border border-gray-300 rounded-md"
-//               accept="image/*"
-//               multiple
-//             />
-//           </div>
-
-//           {/* Categories Dropdown */}
-//           <div className="mb-4">
-//             <label className="block text-sm font-medium mb-1">التصنيفات</label>
-//             <select
-//               value={formData.categoryIds[0] || ""}
-//               onChange={handleCategoryChange}
-//               className="w-full p-2 border border-gray-300 rounded-md"
-//               required
-//             >
-//               <option value="" disabled>اختر تصنيفًا</option>
-//               {categories.map((category) => (
-//                 <option key={category._id} value={category._id}>
-//                   {category.name}
-//                 </option>
-//               ))}
-//             </select>
-//           </div>
-
-//           {/* Tags */}
-//           <div className="mb-4">
-//             <label className="block text-sm font-medium mb-1">الوسوم</label>
-//             <input
-//               type="text"
-//               name="tags"
-//               value={formData.tags}
-//               onChange={(e) => handleTagsChange(e.target.value)}
-//               className="w-full p-2 border border-gray-300 rounded-md"
-//               placeholder="أدخل الوسوم مفصولة بفاصلة"
-//             />
-//           </div>
-
-//           {/* Error Message */}
-//           {error && <div className="text-red-500 mb-4">{error}</div>}
-
-//           {/* Buttons */}
-//           <div className="flex justify-end gap-2">
-//             <button
-//               type="button"
-//               onClick={onClose}
-//               className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
-//             >
-//               إلغاء
-//             </button>
-//             <button
-//               type="submit"
-//               disabled={loading}
-//               className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600"
-//             >
-//               {loading ? "جاري التحديث..." : "تحديث"}
-//             </button>
-//           </div>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default EditArticleModal;
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { X, Upload, Image, Tag, CheckCircle, AlertCircle } from "lucide-react";
@@ -280,7 +17,7 @@ const EditArticleModal = ({ isOpen, onClose, article, onArticleUpdated }) => {
   const [success, setSuccess] = useState("");
   const [previewImage, setPreviewImage] = useState(null);
 
-  // Reset form data when the modal is closed or a new article is selected
+  
   useEffect(() => {
     if (isOpen && article) {
       setFormData({
@@ -292,7 +29,7 @@ const EditArticleModal = ({ isOpen, onClose, article, onArticleUpdated }) => {
         tags: article.tags.join(","),
       });
       
-      // If article has a featured image, show it in preview
+      
       if (article.featuredImage) {
         setPreviewImage(article.featuredImage);
       } else {
@@ -301,7 +38,7 @@ const EditArticleModal = ({ isOpen, onClose, article, onArticleUpdated }) => {
     }
   }, [isOpen, article]);
 
-  // Fetch categories when the modal opens
+  
   useEffect(() => {
     if (isOpen) {
       axios
@@ -316,7 +53,7 @@ const EditArticleModal = ({ isOpen, onClose, article, onArticleUpdated }) => {
     }
   }, [isOpen]);
 
-  // Handle form input changes
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -325,7 +62,7 @@ const EditArticleModal = ({ isOpen, onClose, article, onArticleUpdated }) => {
     }));
   };
 
-  // Handle featured image file change
+  
   const handleFeaturedImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -334,7 +71,7 @@ const EditArticleModal = ({ isOpen, onClose, article, onArticleUpdated }) => {
         featuredImage: file,
       }));
       
-      // Create preview URL
+      
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result);
@@ -343,7 +80,7 @@ const EditArticleModal = ({ isOpen, onClose, article, onArticleUpdated }) => {
     }
   };
 
-  // Handle media files change
+  
   const handleMediaChange = (e) => {
     const files = Array.from(e.target.files);
     setFormData((prevData) => ({
@@ -352,7 +89,7 @@ const EditArticleModal = ({ isOpen, onClose, article, onArticleUpdated }) => {
     }));
   };
 
-  // Handle category selection changes
+  
   const handleCategoryChange = (e) => {
     const selectedCategoryId = e.target.value;
     setFormData((prevData) => ({
@@ -361,7 +98,7 @@ const EditArticleModal = ({ isOpen, onClose, article, onArticleUpdated }) => {
     }));
   };
 
-  // Handle tags input changes
+  
   const handleTagsChange = (value) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -369,7 +106,7 @@ const EditArticleModal = ({ isOpen, onClose, article, onArticleUpdated }) => {
     }));
   };
 
-  // Handle form submission
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);

@@ -9,11 +9,11 @@ export default function Status() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Pagination state
+  
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  // Fetch articles with pagination
+  
   useEffect(() => {
     fetchArticles(currentPage);
   }, [currentPage]);
@@ -24,7 +24,7 @@ export default function Status() {
         withCredentials: true,
         params: {
           page: page,
-          limit: 6, // Fetch 6 articles per page
+          limit: 6, 
         },
       });
       setArticles(response.data.articles);
@@ -37,14 +37,14 @@ export default function Status() {
     }
   };
 
-  // Handle page change
+  
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
     }
   };
 
-  // Get counts for summary cards using the exact Arabic terms
+  
   const totalArticles = articles.length;
   const pendingCount = articles.filter(article =>
     article.status === "pending" ||
@@ -184,11 +184,11 @@ export default function Status() {
   );
 }
 
-// Status badge component with the correct Arabic terms
+
 function StatusBadge({ status }) {
   let bgColor, textColor, icon, displayText;
 
-  // Handle both English and Arabic status values
+  
   if (status === "pending" || status === "قيد الانتظار") {
     bgColor = "bg-yellow-100";
     textColor = "text-yellow-800";
