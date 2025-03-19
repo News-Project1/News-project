@@ -1,89 +1,13 @@
 
-// import { useState, useEffect } from "react";
-// import { Play, Pause, Mic } from "lucide-react";
-// import { motion } from "framer-motion";
-
-// const newsData = [
-//   { title: "ترامب للحوثيين: حان وقتكم", link: "/news/1" },
-//   { title: "البنتاغون يدرس خيارات جديدة في الشرق الأوسط", link: "/news/2" },
-//   { title: "انخفاض أسعار النفط بعد التوترات السياسية", link: "/news/3" },
-// ];
-
-// export default function NewsTicker() {
-//   const [isPlaying, setIsPlaying] = useState(false);
-//   const [audio] = useState(new Audio("news.mp3"));
-//   const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
-
-//   useEffect(() => {
-//     audio.onended = () => setIsPlaying(false);
-//     return () => audio.pause(); // Cleanup on unmount
-//   }, [audio]);
-
-//   const handlePlayPause = () => {
-//     if (isPlaying) {
-//       audio.pause();
-//     } else {
-//       audio.play();
-//     }
-//     setIsPlaying(!isPlaying);
-//   };
-  
-//   useEffect(() => {
-//     const interval = setInterval(() => {
-//       setCurrentNewsIndex((prevIndex) => (prevIndex + 1) % newsData.length);
-//     }, 4000); // تبديل العناوين كل 4 ثوانٍ مع تأثير الحركة
-//     return () => clearInterval(interval);
-//   }, []);
-
-//   return (
-//     <div className="flex items-center justify-between w-full bg-gray-900/90 backdrop-blur-sm text-white py-3 px-4 text-sm border-b border-gray-700/60 shadow-md">
-//       {/* شريط الأخبار المتغير */}
-//       <div className="flex items-center">
-//         <span className="text-[#F4AE3F] font-bold ml-3">آخر الأخبار</span>
-//         <span className="text-gray-400 mx-2">|</span>
-//         <motion.a
-//           key={currentNewsIndex}
-//           href={newsData[currentNewsIndex].link}
-//           className="text-white hover:text-[#c8a163] transition"
-//           initial={{ opacity: 0, y: -5 }}
-//           animate={{ opacity: 1, y: 0 }}
-//           exit={{ opacity: 0, y: 5 }}
-//           transition={{ duration: 0.5 }}
-//         >
-//           {newsData[currentNewsIndex].title}
-//         </motion.a>
-//       </div>
-      
-//       {/* قسم تشغيل النشرة الصوتية */}
-//       <div className="flex items-center text-gray-300">
-//         <Mic size={16} className="ml-2 text-[#F4AE3F]" />
-//         <p className="ml-2 font-semibold">استمع إلى "إيجاز" اليوم</p>
-//         <span className="mx-2 text-gray-400">7:55 دقيقة</span>
-//         <button 
-//           className="p-2 bg-gray-800 text-white rounded-full hover:bg-red-600 transition flex items-center justify-center w-8 h-8"
-//           onClick={handlePlayPause}
-//         >
-//           {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-//         </button>
-//       </div>
-//     </div>
-//   );
-// }
-
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Play, Pause, Mic } from "lucide-react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom"; // استيراد Link
 
 const API_BASE_URL = "http://localhost:8000/api"; // رابط الـ API
-const LATEST_ARTICLES_ENDPOINT = `${API_BASE_URL}/articles/mostViewRoute`;
+const LATEST_ARTICLES_ENDPOINT = `${API_BASE_URL}/last`;
 const RADIO_API_ENDPOINT = `${API_BASE_URL}/radios`;
-const newsData = [
-  // { title: "ترامب للحوثيين: حان وقتكم", link: "/news/1" },
-  { title: "البنتاغون يدرس خيارات جديدة في الشرق الأوسط", link: "/news/2" },
-  { title: "انخفاض أسعار النفط بعد التوترات السياسية", link: "/news/3" },
-];
-
 
 export default function NewsTicker() {
   const [news, setNews] = useState([]); // الأخبار العاجلة
@@ -111,7 +35,7 @@ export default function NewsTicker() {
     fetchLatestArticles();
   }, []);
 
-  // 🔄 تغيير الأخبار كل 4 ثوانٍ
+  // 🔄 تغيير الأخبار كل 2 ثانية
   useEffect(() => {
     if (news.length === 0) return;
 
@@ -167,7 +91,7 @@ export default function NewsTicker() {
   return (
     <div className="flex items-center justify-between w-full bg-gradient-to-r from-[#213058] via-[#213058] to-[#28696A] nbg-from-[#28696A] via-[#213058] to-[#213058]backdrop-blur-sm text-white py-3 px-4 text-sm border-b border-gray-700/60 shadow-md">
       {/* شريط الأخبار */}
-      {/* <div className="flex items-center">
+      <div className="flex items-center">
         <span className="text-[#F4AE3F] font-bold ml-3">آخر الأخبار</span>
         <span className="text-gray-400 mx-2">|</span>
 
@@ -176,36 +100,20 @@ export default function NewsTicker() {
         ) : error ? (
           <p className="text-red-400">{error}</p>
         ) : news.length > 0 ? (
-          <motion.a
+          <motion.div
             key={currentNewsIndex}
-            href={`/news/${news[currentNewsIndex]._id}`}
-            className="text-white hover:text-[#c8a163] transition"
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 5 }}
             transition={{ duration: 0.5 }}
           >
-            {news[currentNewsIndex].title}
-          </motion.a>
+            <Link to={`/news/${news[currentNewsIndex]._id}`} className="text-white hover:text-[#c8a163] transition">
+              {news[currentNewsIndex].title}
+            </Link>
+          </motion.div>
         ) : (
           <p className="text-gray-400">لا توجد أخبار متاحة</p>
         )}
-      </div>
-    */}
-      <div className="flex items-center">
-         <span className="text-[#F4AE3F] font-bold ml-3">آخر الأخبار</span>
-         <span className="text-gray-400 mx-2">|</span>
-       <motion.a
-          key={currentNewsIndex}
-          href={newsData[currentNewsIndex].link}
-          className="text-white hover:text-[#c8a163] transition"
-          initial={{ opacity: 0, y: -5 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 5 }}
-          transition={{ duration: 0.5 }}
-        >
-          {newsData[currentNewsIndex].title}
-        </motion.a>
       </div>
 
       {/* مشغل الراديو */}
@@ -222,4 +130,4 @@ export default function NewsTicker() {
       </div>
     </div>
   );
-} 
+}

@@ -98,10 +98,12 @@ function Home() {
     <>
       <HeroSection />
       <NewsTicker />
-      <div className="container mx-auto px-4 space-y-6">
-      <NewsDashboard />
-      <Categories />
       <StatisticsSection />
+
+      <div className="container mx-auto px-4 space-y-6">
+      {/* <NewsDashboard /> */}
+      <Categories />
+      {/* <StatisticsSection /> */}
 
       {/* <ArabicNewsLayout /> */}
       <ArabicNewsLayout />
