@@ -3,27 +3,27 @@ require('./models');
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-// const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const journalistRoutes = require("./routes/journalistRoutes");
 const articleRoutes = require("./routes/articleRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const connectDB = require("./config/db");
+
+
 //heba
 // const newsRoutes = require("./routes/newsRoutes");
-
+const mostLikeRoutes = require('./routes/mostLikeRoutes');
+const mostViewedRoutes = require('./routes/mostViewedRoutes');
 const radioRoutes = require("./routes/radioRoutes");
-
-const mostViewRoute = require("./routes/mostViewRoute");
+const lastRoute= require("./routes/lastRoute");
 ///////////////////////////////////
-const videoRoutes = require('./routes/videoRoutes');
 
+const videoRoutes = require('./routes/videoRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const contactMessage = require("./routes/contactMessageRoutes");
 const paymentRoutes = require('./routes/PaymentRoutes'); // ربط الـ API بـ paymentRoutes
-// const radioRoutes = require("./routes/radioRoutes");
-
 const bookmarkRoutes = require("./routes/bookMarkRoute");///////////////////////
+const statisticsRoutes = require('./routes/statisticsRoutes');
 
 
 const path = require("path");
@@ -59,8 +59,13 @@ app.use('/uploads', express.static('uploads'));
 
 //heba 
 // app.use("/api/news", newsRoutes);
-app.use("/api", mostViewRoute);
+app.use("/api",lastRoute);
 app.use("/api/radios", radioRoutes);
+app.use('/api/', mostLikeRoutes);
+app.use('/api', mostViewedRoutes);
+app.use('/api', statisticsRoutes);
+
+///////////////////////////////////////
 
 
 const PORT = process.env.PORT || 5000;
