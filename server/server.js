@@ -16,6 +16,9 @@ const mostLikeRoutes = require('./routes/mostLikeRoutes');
 const mostViewedRoutes = require('./routes/mostViewedRoutes');
 const radioRoutes = require("./routes/radioRoutes");
 const lastRoute= require("./routes/lastRoute");
+const newsletterRoutes = require('./routes/newsletterRoutes');
+
+
 ///////////////////////////////////
 
 const videoRoutes = require('./routes/videoRoutes');
@@ -64,6 +67,9 @@ app.use("/api/radios", radioRoutes);
 app.use('/api/', mostLikeRoutes);
 app.use('/api', mostViewedRoutes);
 app.use('/api', statisticsRoutes);
+app.use('/api', newsletterRoutes);
+
+
 
 ///////////////////////////////////////
 
