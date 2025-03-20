@@ -54,7 +54,7 @@ exports.signup = async (req, res) => {
 
     res.cookie("authToken", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure:false,
       maxAge: 3600000,
     });
 
@@ -88,7 +88,7 @@ exports.signup = async (req, res) => {
 //       maxAge: 3600000,
 //     });
 
-//     res.redirect(process.env.CLIENT_URL || "http://localhost:3000");
+//     res.redirect(process.env.CLIENT_URL || "http://localhost:8000");
 //   } catch (error) {
 //     res
 //       .status(500)
