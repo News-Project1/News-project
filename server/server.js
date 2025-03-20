@@ -30,6 +30,7 @@ const statisticsRoutes = require('./routes/statisticsRoutes');
 
 
 const path = require("path");
+const { isAuthenticated } = require("./middleware/journalistMiddleware");
 const app = express();
 
 
@@ -49,6 +50,8 @@ connectDB();
 
 app.use("/user", bookmarkRoutes);////////////////
 app.use('/api', paymentRoutes); /////////////////
+
+app.use("/api/auth/check", isAuthenticated);
 
 app.use("/auth", authRoutes);
 app.use("/api", contactMessage);
@@ -74,6 +77,6 @@ app.use('/api', newsletterRoutes);
 ///////////////////////////////////////
 
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
  
