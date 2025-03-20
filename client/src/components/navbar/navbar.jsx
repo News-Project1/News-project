@@ -1,25 +1,42 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaUser, FaSignOutAlt, FaBars, FaTimes } from "react-icons/fa";
+import {
+  FaUser,
+  FaSignOutAlt,
+  FaBars,
+  FaTimes,
+  FaBookmark,
+} from "react-icons/fa";
 import axios from "axios";
+import Cookies from "js-cookie"; // Import js-cookie
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  // تحقق من حالة المستخدم عند تحميل المكون
   useEffect(() => {
     const checkAuth = async () => {
-      try {
-        const response = await axios.get("/api/auth/check", {
-          withCredentials: true,
-        });
-        if (response.data.user) {
-          setUser(response.data.user);
+      // Check for the token in cookies
+      const token = Cookies.get("authToken");
+      if (token) {
+        try {
+          const response = await axios.get(
+            "http://localhost:8000/api/auth/check",
+            {
+              headers: {
+                Authorization: `${token}`, // Send token in the header
+              },
+              withCredentials: true,
+            }
+          );
+
+          if (response.data.user) {
+            setUser(response.data.user);
+          }
+        } catch (error) {
+          console.error("فشل في التحقق من المصادقة:", error);
         }
-      } catch (error) {
-        console.error("فشل في التحقق من المصادقة:", error);
       }
     };
 
@@ -31,6 +48,7 @@ const Navbar = () => {
     try {
       await axios.post("/api/auth/logout", {}, { withCredentials: true });
       setUser(null);
+      Cookies.remove("authToken"); // Remove token from cookies on logout
       navigate("/");
     } catch (error) {
       console.error("فشل في تسجيل الخروج:", error);
@@ -39,7 +57,6 @@ const Navbar = () => {
 
   return (
     <div className="relative">
-      {/* خلفية متدرجة جميلة للنافبار مع خاصية sticky */}
       <nav className="bg-gradient-to-r from-[#28696A] via-[#213058] to-[#213058] text-white py-4 px-6 flex items-center justify-between shadow-lg fixed top-0 left-0 right-0 z-50">
         {/* الشعار + الاسم */}
         <div className="flex items-center space-x-3">
@@ -53,71 +70,41 @@ const Navbar = () => {
         {/* قائمة سطح المكتب مع تأثيرات جميلة */}
         <ul className="hidden md:flex space-x-8 text-sm font-semibold">
           <li>
-            <Link 
-              className="hover:text-[#F4AE3F] transition-all duration-300 relative pb-1 after:content-[''] after:absolute after:h-0.5 after:w-0 after:left-0 after:bottom-0 after:bg-[#F4AE3F] hover:after:w-full after:transition-all after:duration-300" 
-              to="/"
-            >
+            <Link className="hover:text-[#F4AE3F]" to="/">
               الرئيسية
             </Link>
           </li>
           <li>
-            <Link 
-              className="hover:text-[#F4AE3F] transition-all duration-300 relative pb-1 after:content-[''] after:absolute after:h-0.5 after:w-0 after:left-0 after:bottom-0 after:bg-[#F4AE3F] hover:after:w-full after:transition-all after:duration-300" 
-              to="/about"
-            >
+            <Link className="hover:text-[#F4AE3F]" to="/about">
               من نحن
             </Link>
           </li>
           <li>
-            <Link 
-              className="hover:text-[#F4AE3F] transition-all duration-300 relative pb-1 after:content-[''] after:absolute after:h-0.5 after:w-0 after:left-0 after:bottom-0 after:bg-[#F4AE3F] hover:after:w-full after:transition-all after:duration-300" 
-              to="/contact"
-            >
+            <Link className="hover:text-[#F4AE3F]" to="/contact">
               تواصل معنا
             </Link>
           </li>
           <li>
-            <Link 
-              className="hover:text-[#F4AE3F] transition-all duration-300 relative pb-1 after:content-[''] after:absolute after:h-0.5 after:w-0 after:left-0 after:bottom-0 after:bg-[#F4AE3F] hover:after:w-full after:transition-all after:duration-300" 
-              to="/bookmarks"
-            >
-              المشاهدة لاحقا
-            </Link>
-          </li>
-          <li>
-            <Link 
-              className="hover:text-[#F4AE3F] transition-all duration-300 relative pb-1 after:content-[''] after:absolute after:h-0.5 after:w-0 after:left-0 after:bottom-0 after:bg-[#F4AE3F] hover:after:w-full after:transition-all after:duration-300" 
-              to="/categories"
-            >
+            <Link className="hover:text-[#F4AE3F]" to="/categories">
               التصنيفات
             </Link>
           </li>
-          
           {user && user.role === "صحفي" && (
             <li>
-              <Link 
-                className="hover:text-[#F4AE3F] transition-all duration-300 relative pb-1 after:content-[''] after:absolute after:h-0.5 after:w-0 after:left-0 after:bottom-0 after:bg-[#F4AE3F] hover:after:w-full after:transition-all after:duration-300" 
-                to="/journalist"
-              >
+              <Link className="hover:text-[#F4AE3F]" to="/journalist">
                 لوحة الصحفي
               </Link>
             </li>
           )}
           {user && user.role === "admin" && (
             <li>
-              <Link 
-                className="hover:text-[#F4AE3F] transition-all duration-300 relative pb-1 after:content-[''] after:absolute after:h-0.5 after:w-0 after:left-0 after:bottom-0 after:bg-[#F4AE3F] hover:after:w-full after:transition-all after:duration-300" 
-                to="/admin"
-              >
+              <Link className="hover:text-[#F4AE3F]" to="/admin">
                 لوحة الإدارة
               </Link>
             </li>
           )}
           <li>
-            <Link 
-              className="hover:text-[#F4AE3F] transition-all duration-300 relative pb-1 after:content-[''] after:absolute after:h-0.5 after:w-0 after:left-0 after:bottom-0 after:bg-[#F4AE3F] hover:after:w-full after:transition-all after:duration-300" 
-              to="/videos"
-            >
+            <Link className="hover:text-[#F4AE3F]" to="/videos">
               بودكاست
             </Link>
           </li>
@@ -146,16 +133,17 @@ const Navbar = () => {
                 to="/profile"
                 className="hover:text-[#F4AE3F] transition-colors duration-300 flex items-center"
               >
-                <div className="bg-[#F0E6D7] p-2 rounded-full text-[#213058]">
-                  <FaUser className="text-xl" />
-                </div>
-              </Link>
-              <Link
-                to="/bookmarks"
-                className="hover:text-[#F4AE3F] transition-colors duration-300 flex items-center"
-              >
-                <div className="bg-[#F0E6D7] p-2 rounded-full text-[#213058]">
-                  <FaBookmark className="text-xl" />
+                {/* عرض صورة المستخدم إذا كانت موجودة */}
+                <div className="w-10 h-10 rounded-full overflow-hidden">
+                  {user.profilePicture ? (
+                    <img
+                      src={user.profilePicture}
+                      alt="User Profile"
+                      className="object-cover w-full h-full"
+                    />
+                  ) : (
+                    <FaUser className="text-xl" />
+                  )}
                 </div>
               </Link>
               <button
@@ -175,7 +163,11 @@ const Navbar = () => {
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden focus:outline-none bg-[#F0E6D7] p-2 rounded-lg text-[#213058] hover:bg-[#F4AE3F] hover:text-white transition-all duration-300"
           >
-            {isOpen ? <FaTimes className="text-2xl" /> : <FaBars className="text-2xl" />}
+            {isOpen ? (
+              <FaTimes className="text-2xl" />
+            ) : (
+              <FaBars className="text-2xl" />
+            )}
           </button>
         </div>
       </nav>
@@ -183,85 +175,76 @@ const Navbar = () => {
       {/* قائمة الجوال مع تصميم جديد وانتقالات متحركة */}
       {isOpen && (
         <div className="md:hidden bg-gradient-to-b from-[#213058] to-[#28696A] text-white p-6 space-y-4 shadow-lg fixed top-24 right-0 left-0 z-40 animate-fadeIn rounded-b-lg">
+          {/* روابط الجوال */}
           <Link
             to="/"
-            className="block text-sm font-medium hover:bg-[#F4AE3F] p-3 rounded-lg transition-all flex items-center justify-between"
+            className="block text-sm font-medium hover:bg-[#F4AE3F]"
             onClick={() => setIsOpen(false)}
           >
-            <span>الرئيسية</span>
-            <span className="text-[#F0E6D7] text-xl">›</span>
+            الرئيسية
           </Link>
           <Link
             to="/about"
-            className="block text-sm font-medium hover:bg-[#F4AE3F] p-3 rounded-lg transition-all flex items-center justify-between"
+            className="block text-sm font-medium hover:bg-[#F4AE3F]"
             onClick={() => setIsOpen(false)}
           >
-            <span>من نحن</span>
-            <span className="text-[#F0E6D7] text-xl">›</span>
+            من نحن
           </Link>
           <Link
             to="/contact"
-            className="block text-sm font-medium hover:bg-[#F4AE3F] p-3 rounded-lg transition-all flex items-center justify-between"
+            className="block text-sm font-medium hover:bg-[#F4AE3F]"
             onClick={() => setIsOpen(false)}
           >
-            <span>تواصل معنا</span>
-            <span className="text-[#F0E6D7] text-xl">›</span>
+            تواصل معنا
           </Link>
           <Link
             to="/payment"
-            className="block text-sm font-medium hover:bg-[#F4AE3F] p-3 rounded-lg transition-all flex items-center justify-between"
+            className="block text-sm font-medium hover:bg-[#F4AE3F]"
             onClick={() => setIsOpen(false)}
           >
-            <span>اشتراك</span>
-            <span className="text-[#F0E6D7] text-xl">›</span>
+            اشتراك
           </Link>
           <Link
             to="/categories"
-            className="block text-sm font-medium hover:bg-[#F4AE3F] p-3 rounded-lg transition-all flex items-center justify-between"
+            className="block text-sm font-medium hover:bg-[#F4AE3F]"
             onClick={() => setIsOpen(false)}
           >
-            <span>التصنيفات</span>
-            <span className="text-[#F0E6D7] text-xl">›</span>
+            التصنيفات
           </Link>
           <Link
             to="/articles"
-            className="block text-sm font-medium hover:bg-[#F4AE3F] p-3 rounded-lg transition-all flex items-center justify-between"
+            className="block text-sm font-medium hover:bg-[#F4AE3F]"
             onClick={() => setIsOpen(false)}
           >
-            <span>المقالات</span>
-            <span className="text-[#F0E6D7] text-xl">›</span>
+            المقالات
           </Link>
           {user && user.role === "صحفي" && (
             <Link
               to="/journalist"
-              className="block text-sm font-medium hover:bg-[#F4AE3F] p-3 rounded-lg transition-all flex items-center justify-between"
+              className="block text-sm font-medium hover:bg-[#F4AE3F]"
               onClick={() => setIsOpen(false)}
             >
-              <span>لوحة الصحفي</span>
-              <span className="text-[#F0E6D7] text-xl">›</span>
+              لوحة الصحفي
             </Link>
           )}
           {user && user.role === "admin" && (
             <Link
               to="/admin"
-              className="block text-sm font-medium hover:bg-[#F4AE3F] p-3 rounded-lg transition-all flex items-center justify-between"
+              className="block text-sm font-medium hover:bg-[#F4AE3F]"
               onClick={() => setIsOpen(false)}
             >
-              <span>لوحة الإدارة</span>
-              <span className="text-[#F0E6D7] text-xl">›</span>
+              لوحة الإدارة
             </Link>
           )}
           <Link
             to="/videos"
-            className="block text-sm font-medium hover:bg-[#F4AE3F] p-3 rounded-lg transition-all flex items-center justify-between"
+            className="block text-sm font-medium hover:bg-[#F4AE3F]"
             onClick={() => setIsOpen(false)}
           >
-            <span>الفيديوهات</span>
-            <span className="text-[#F0E6D7] text-xl">›</span>
+            الفيديوهات
           </Link>
 
-          <div className="h-px bg-gradient-to-r from-transparent via-[#F0E6D7] to-transparent my-3"></div>
-
+          {/* تسجيل دخول / إنشاء حساب */}
           {!user ? (
             <div className="space-y-3 mt-4">
               <Link
@@ -291,18 +274,6 @@ const Navbar = () => {
                 </div>
                 <span className="text-[#F0E6D7] text-xl">›</span>
               </Link>
-              <Link
-                to="/bookmarks"
-                className="block text-sm hover:bg-[#F4AE3F] p-3 rounded-lg transition-all flex items-center space-x-2 justify-between"
-              >
-                <div className="flex items-center space-x-2">
-                  <div className="bg-[#F0E6D7] p-1.5 rounded-full text-[#213058]">
-                    <FaBookmark className="text-lg" />
-                  </div>
-                  <span>المفضلة</span>
-                </div>
-                <span className="text-[#F0E6D7] text-xl">›</span>
-              </Link>
               <button
                 onClick={handleLogout}
                 className="w-full text-sm text-right hover:bg-[#F4AE3F] p-3 rounded-lg transition-all flex items-center space-x-2 justify-between"
@@ -319,7 +290,7 @@ const Navbar = () => {
           )}
         </div>
       )}
-      
+
       {/* مساحة فارغة لتعويض ارتفاع Navbar الثابت */}
       <div className="pt-24"></div>
     </div>
