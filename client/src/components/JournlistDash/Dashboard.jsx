@@ -17,7 +17,7 @@ export default function JournalistDash() {
   };
 
   return (
-    <div className="flex bg-gray-50 min-h-screen relative flex-row-reverse rtl">
+    <div className="flex bg-gray-50 min-h-screen relative" dir="rtl">
       {/* Mobile Sidebar Toggle */}
       <button
         className="sm:hidden fixed bottom-4 right-4 z-50 p-3 bg-[#1E293B] text-white rounded-full shadow-lg" // Changed left-4 to right-4 for RTL
