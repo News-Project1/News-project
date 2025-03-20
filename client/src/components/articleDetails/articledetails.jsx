@@ -15,7 +15,7 @@ const ArticleDetails = () => {
   const [views, setViews] = useState(0);
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
-
+  const [isLiked, setIsLiked] = useState(false);
   // Fetch article details
   const fetchArticle = async () => {
     try {
@@ -44,22 +44,36 @@ const ArticleDetails = () => {
     setIsBookmarked(bookmarkedArticles.includes(id));
   }, [id]);
 
-  // Handle like functionality
+  
   const handleLike = async () => {
     try {
+      // Send POST request to like/unlike the article
       const response = await axios.post(
         `http://localhost:8000/api/articles/${id}/like`,
         {},
         { withCredentials: true }
       );
+  
       if (response.data.success) {
+        // Update likes count and toggle like state
         setLikes(response.data.data.likes);
+        setIsLiked(!isLiked);
+  
       }
     } catch (err) {
       console.error('Error liking article:', err);
-      alert('فشل في الإعجاب بالمقال. يرجى تسجيل الدخول.');
+  
+      // Check if the error is due to unauthorized access (not logged in)
+      if (err.response && err.response.status === 401) {
+        Swal.fire({
+          icon: 'error',
+          title: 'غير مسموح',
+          text: 'يرجى تسجيل الدخول لتتمكن من الإعجاب بالمقال.',
+        });
+      } 
     }
   };
+  
 
   // Handle comment submission
   const handleCommentSubmit = async (e) => {
@@ -155,33 +169,45 @@ const ArticleDetails = () => {
   };
 
   // Handle bookmark functionality
-  const handleBookmark = () => {
-    const bookmarkedArticles = JSON.parse(localStorage.getItem('bookmarkedArticles')) || [];
-    if (isBookmarked) {
-      const updatedBookmarks = bookmarkedArticles.filter(articleId => articleId !== id);
-      localStorage.setItem('bookmarkedArticles', JSON.stringify(updatedBookmarks));
-      setIsBookmarked(false);
+  const handleBookmark = async () => {
+    try {
+      // Send PUT request to toggle bookmark state
+      const response = await axios.put(
+        `http://localhost:8000/user/bookmarks/${id}`,
+        {},
+        { withCredentials: true }
+      );
+  
+      if (response.data.success) {
+        // Toggle bookmark state
+        setIsBookmarked(!isBookmarked);
+  
+        // Show success alert
+        Swal.fire({
+          icon: 'success',
+          title: 'تمت الإضافة إلى المفضلة بنجاح',
+          showConfirmButton: false,
+          timer: 1500, // Close alert after 1.5 seconds
+        });
+      } else {
+        // Show error alert if the request was not successful
+        Swal.fire({
+          icon: 'error',
+          title: 'فشل في حفظ المقال في المفضلة',
+          text: 'يرجى المحاولة مرة أخرى.',
+        });
+      }
+    } catch (err) {
+      console.error('Error bookmarking article:', err);
+  
+      // Show error alert for login issue
       Swal.fire({
-        icon: 'success',
-        title: 'تمت الإزالة من الحفظ',
-        text: 'تمت إزالة المقال من قائمة الحفظ بنجاح.',
-        confirmButtonText: 'حسنًا',
-        confirmButtonColor: '#28696A',
-      });
-    } else {
-      bookmarkedArticles.push(id);
-      localStorage.setItem('bookmarkedArticles', JSON.stringify(bookmarkedArticles));
-      setIsBookmarked(true);
-      Swal.fire({
-        icon: 'success',
-        title: 'تم الحفظ بنجاح',
-        text: 'تمت إضافة المقال إلى قائمة الحفظ بنجاح.',
-        confirmButtonText: 'حسنًا',
-        confirmButtonColor: '#28696A',
+        icon: 'error',
+        title: 'فشل في حفظ المقال في المفضلة',
+        text: 'يرجى تسجيل الدخول أولاً.',
       });
     }
   };
-
   // Loading state
   if (loading) return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-[#28696A] to-[#F0E6D7]/30">
@@ -231,27 +257,37 @@ const ArticleDetails = () => {
           </article>
 
           <div className="flex items-center gap-4 mb-10">
-  {/* زر الإعجاب */}
-  <button
-    onClick={handleLike}
-    title="إعجاب"
-    className="p-3 bg-[#28696A] text-white rounded-full flex items-center hover:bg-[#28696A]/80 transition-colors duration-300"
+{/* زر الإعجاب */}
+<button
+  onClick={handleLike}
+  title="إعجاب"
+  className={`p-3 bg-white border border-[#28696A] rounded-full flex items-center hover:bg-[#28696A]/20 transition-colors duration-300`}
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className={`h-6 w-6 ${isLiked ? 'text-[#28696A]' : 'text-[#28696A]/50'}`} // تغيير لون الأيقونة فقط
+    viewBox="0 0 20 20"
+    fill="currentColor"
   >
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-      <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
-    </svg>
-  </button>
+    <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+  </svg>
+</button>
 
-  {/* زر الحفظ */}
-  <button
-    onClick={handleBookmark}
-    title={isBookmarked ? 'تم الحفظ' : 'حفظ'}
-    className={`p-3 ${isBookmarked ? 'bg-[#F4AE3F]' : 'bg-white'} border border-[#28696A] text-[#213058] rounded-full flex items-center hover:bg-[#F4AE3F]/20 transition-colors duration-300`}
+{/* زر الحفظ */}
+<button
+  onClick={handleBookmark}
+  title={isBookmarked ? 'تم الحفظ' : 'حفظ'}
+  className={`p-3 bg-white border border-[#28696A] rounded-full flex items-center hover:bg-[#28696A]/20 transition-colors duration-300`}
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className={`h-6 w-6 ${isBookmarked ? 'text-[#28696A]' : 'text-[#28696A]/50'}`} // تغيير لون الأيقونة فقط
+    viewBox="0 0 20 20"
+    fill="currentColor"
   >
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-      <path fillRule="evenodd" d="M5 2a2 2 0 00-2 2v14l5-3 5 3V4a2 2 0 00-2-2H5zm0 2h6v12l-3-1.8L5 16V4z" clipRule="evenodd" />
-    </svg>
-  </button>
+    <path fillRule="evenodd" d="M5 2a2 2 0 00-2 2v14l5-3 5 3V4a2 2 0 00-2-2H5zm0 2h6v12l-3-1.8L5 16V4z" clipRule="evenodd" />
+  </svg>
+</button>
 
   {/* زر المشاركة */}
   <div className="relative">
