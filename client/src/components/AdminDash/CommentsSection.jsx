@@ -13,10 +13,10 @@ const CommentsSection = () => {
   const fetchComments = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_BASE_URL}/comments`,{withCredentials: true});
+      const response = await axios.get(`${API_BASE_URL}/comments`, { withCredentials: true });
       const formattedComments = response.data.map((comment) => ({
         ...comment,
-        id: comment._id,
+        id: comment._id, 
         author:
           comment.author && typeof comment.author === "object"
             ? comment.author.full_name || comment.author.username || "غير معروف"
@@ -51,9 +51,13 @@ const CommentsSection = () => {
   // تحديث حالة التعليق
   const handleStatusChange = async (commentId, newStatus) => {
     try {
-      const response = await axios.put(`${API_BASE_URL}/comments/${commentId}/status`, {
-        status: newStatus === "مرئي" ? "visible" : newStatus === "مخفي" ? "hidden" : "reported",
-      },{ withCredentials: true });
+      const response = await axios.put(
+        `${API_BASE_URL}/comments/${commentId}/status`,
+        {
+          status: newStatus === "مرئي" ? "visible" : newStatus === "مخفي" ? "hidden" : "reported",
+        },
+        { withCredentials: true }
+      );
       setComments((prevComments) =>
         prevComments.map((comment) =>
           comment.id === commentId
@@ -102,9 +106,9 @@ const CommentsSection = () => {
               </tr>
             </thead>
             <tbody>
-              {comments.map((comment) => (
+              {comments.map((comment, index) => (
                 <tr key={comment.id} className="border-b">
-                  <td className="p-3">{comment.id}</td>
+                  <td className="p-3">{index + 1}</td> {/* عرض رقم تسلسلي بدلاً من comment.id */}
                   <td className="p-3">{comment.content.substring(0, 50)}...</td>
                   <td className="p-3">{comment.author}</td>
                   <td className="p-3">
@@ -120,7 +124,6 @@ const CommentsSection = () => {
                     >
                       <option value="مرئي">مرئي</option>
                       <option value="مخفي">مخفي</option>
-                      <option value="مُبلغ عنه">مُبلغ عنه</option>
                     </select>
                   </td>
                   <td className="p-3">{comment.date}</td>

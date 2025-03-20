@@ -3,7 +3,6 @@ import Sidebar from "./Sidebar";
 import Header from "./Header";
 import OverviewSection from "./OverviewSection";
 import ContentSection from "./ContentSection";
-import JournalistsSection from "./JournalistsSection";
 import CommentsSection from "./CommentsSection";
 import AnalyticsSection from "./AnalyticsSection";
 import TrendingSection from "./TrendingSection";
@@ -103,12 +102,12 @@ const Admin = () => {
     }
   };
 
-  // جلب المقالات عند تغيير الصفحة أو البحث
+  
   useEffect(() => {
     fetchArticles(currentPage, searchTerm);
   }, [currentPage, searchTerm]);
 
-  // جلب البيانات الإضافية مرة واحدة عند التحميل
+ 
   useEffect(() => {
     fetchAdditionalData();
   }, []);
@@ -160,13 +159,13 @@ const Admin = () => {
     setArticles(prevArticles => prevArticles.filter(article => (article.id || article._id) !== articleId));
     setTotalArticles(prev => prev - 1);
     if (articles.length === 1 && currentPage > 1) {
-      setCurrentPage(currentPage - 1); // الانتقال للصفحة السابقة إذا أصبحت الصفحة فارغة
+      setCurrentPage(currentPage - 1); 
     }
   };
 
   const handlePageChange = (newPage) => {
     console.log('handlePageChange triggered:', { newPage, searchTerm });
-    setCurrentPage(newPage); // تحديث الصفحة الحالية لتفعيل useEffect
+    setCurrentPage(newPage); 
   };
 
   const handleSearch = (term) => {
@@ -191,10 +190,9 @@ const Admin = () => {
   const navItems = [
     { id: "overview", label: "نظرة عامة على اللوحة", icon: <Home size={20} /> },
     { id: "content", label: "إدارة المحتوى", icon: <FileText size={20} /> },
-    { id: "journalists", label: "حسابات الصحفيين", icon: <Edit size={20} /> },
     { id: "users", label: "إدارة المستخدمين", icon: <Users size={20} /> },
     { id: "comments", label: "مراقبة التعليقات", icon: <MessageSquare size={20} /> },
-    { id: "reports", label: "التقارير والعلم", icon: <Flag size={20} /> },
+    { id: "reports", label: "لشكاوى والبلاغات", icon: <Flag size={20} /> },
     { id: "videos", label: "ادارة الفيديوهات", icon: <Video size={20} /> },
     { id: "analytics", label: "تحليلات الموقع", icon: <BarChart2 size={20} /> },
     { id: "trending", label: "المحتوى الرائج", icon: <TrendingUp size={20} /> },
@@ -227,7 +225,6 @@ const Admin = () => {
             onSearch={handleSearch}
           />
         );
-      case "journalists": return <JournalistsSection journalists={journalists} />;
       case "comments": return <CommentsSection />;
       case "reports": return <ReportsSection  />;
       case "videos": return <VideosSection />;
