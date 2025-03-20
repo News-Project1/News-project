@@ -7,11 +7,10 @@ const UsersSection = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8000/admin/users',{withCredentials:true});
+      const response = await axios.get('http://localhost:8000/admin/users', { withCredentials: true });
       setUsers(response.data);
       setLoading(false);
     } catch (err) {
@@ -21,12 +20,13 @@ const UsersSection = () => {
     }
   };
 
-  
   const handleRoleChange = async (userId, newRole) => {
     try {
-      const response = await axios.put(`http://localhost:8000/admin/users/${userId}/role`, {
-        role: newRole,
-      },{withCredentials: true});
+      const response = await axios.put(
+        `http://localhost:8000/admin/users/${userId}/role`,
+        { role: newRole },
+        { withCredentials: true }
+      );
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
           user._id === userId ? { ...user, role: response.data.role } : user
@@ -40,7 +40,11 @@ const UsersSection = () => {
 
   const handleStatusToggle = async (userId) => {
     try {
-      const response = await axios.put(`http://localhost:8000/admin/users/${userId}/status`,{withCredentials: true});
+      const response = await axios.put(
+        `http://localhost:8000/admin/users/${userId}/status`,
+        {}, // لا حاجة لبيانات في الجسم لأننا فقط نتبدل الحالة
+        { withCredentials: true }
+      );
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
           user._id === userId ? { ...user, isDeleted: response.data.isDeleted } : user
@@ -52,7 +56,6 @@ const UsersSection = () => {
     }
   };
 
-  
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -68,7 +71,7 @@ const UsersSection = () => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow p-4">
+    <div className="bg-white rounded-lg shadow p-4" dir="rtl">
       <h3 className="text-lg font-semibold mb-4">إدارة المستخدمين</h3>
       <div className="overflow-x-auto">
         <table className="w-full">
@@ -90,11 +93,11 @@ const UsersSection = () => {
                 <td className="p-3">{user.email || 'غير محدد'}</td>
                 <td className="p-3">
                   <select
-                    value={user.role || 'user'}
+                    value={user.role || 'reader'}
                     onChange={(e) => handleRoleChange(user._id, e.target.value)}
                     className="border rounded px-2 py-1 text-sm"
                   >
-                    <option value="user">مستخدم</option>
+                    <option value="reader">قارئ</option>
                     <option value="journalist">صحفي</option>
                     <option value="admin">مدير</option>
                   </select>
