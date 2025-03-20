@@ -54,7 +54,7 @@ exports.createArticle = async (req, res) => {
 // ✅ Get articles (for listing pages)
 exports.getArticles = async (req, res) => {
   try {
-    const { page = 1, limit = 10, category, sortBy = 'createdAt', order = 'desc', status = 'published' } = req.query;
+    const { page = 1, limit = 8, category, sortBy = 'createdAt', order = 'desc', status = 'published' } = req.query;
 
     let query = { status, isDeleted: false };
 

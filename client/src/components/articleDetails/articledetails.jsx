@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const ArticleDetails = () => {
   const { id } = useParams();
@@ -14,7 +15,7 @@ const ArticleDetails = () => {
   const [views, setViews] = useState(0);
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
-
+  const [isLiked, setIsLiked] = useState(false);
   // Fetch article details
   const fetchArticle = async () => {
     try {
@@ -43,22 +44,36 @@ const ArticleDetails = () => {
     setIsBookmarked(bookmarkedArticles.includes(id));
   }, [id]);
 
-  // Handle like functionality
+  
   const handleLike = async () => {
     try {
+      // Send POST request to like/unlike the article
       const response = await axios.post(
         `http://localhost:8000/api/articles/${id}/like`,
         {},
         { withCredentials: true }
       );
+  
       if (response.data.success) {
+        // Update likes count and toggle like state
         setLikes(response.data.data.likes);
+        setIsLiked(!isLiked);
+  
       }
     } catch (err) {
       console.error('Error liking article:', err);
-      alert('فشل في الإعجاب بالمقال. يرجى تسجيل الدخول.');
+  
+      // Check if the error is due to unauthorized access (not logged in)
+      if (err.response && err.response.status === 401) {
+        Swal.fire({
+          icon: 'error',
+          title: 'غير مسموح',
+          text: 'يرجى تسجيل الدخول لتتمكن من الإعجاب بالمقال.',
+        });
+      } 
     }
   };
+  
 
   // Handle comment submission
   const handleCommentSubmit = async (e) => {
@@ -71,15 +86,39 @@ const ArticleDetails = () => {
       );
       setComments([response.data.data, ...comments]);
       setNewComment('');
+
+      Swal.fire({
+        icon: 'success',
+        title: 'تم إرسال التعليق بنجاح',
+        text: 'شكرًا لك على تعليقك!',
+        confirmButtonText: 'حسنًا',
+        confirmButtonColor: '#28696A',
+      });
     } catch (err) {
       console.error('Error adding comment:', err);
-      alert('فشل في إضافة التعليق. يرجى تسجيل الدخول.');
+      Swal.fire({
+        icon: 'error',
+        title: 'فشل في إضافة التعليق',
+        text: 'يرجى تسجيل الدخول أولاً.',
+        confirmButtonText: 'حسنًا',
+        confirmButtonColor: '#28696A',
+      });
     }
   };
 
   // Handle report functionality
   const handleReport = async () => {
-    const reason = prompt('ما سبب التقرير؟');
+    const { value: reason } = await Swal.fire({
+      title: 'ما سبب التقرير؟',
+      input: 'text',
+      inputPlaceholder: 'أدخل سبب التقرير...',
+      showCancelButton: true,
+      confirmButtonText: 'إرسال',
+      cancelButtonText: 'إلغاء',
+      confirmButtonColor: '#28696A',
+      cancelButtonColor: '#d33',
+    });
+  
     if (reason) {
       try {
         await axios.post(
@@ -87,10 +126,22 @@ const ArticleDetails = () => {
           { reason },
           { withCredentials: true }
         );
-        alert('تم تقديم التقرير بنجاح');
+        Swal.fire({
+          icon: 'success',
+          title: 'تم تقديم التقرير بنجاح',
+          text: 'شكرًا لك على مساهمتك في تحسين المحتوى.',
+          confirmButtonText: 'حسنًا',
+          confirmButtonColor: '#28696A',
+        });
       } catch (err) {
         console.error('Error reporting article:', err);
-        alert('فشل في تقديم التقرير. يرجى تسجيل الدخول.');
+        Swal.fire({
+          icon: 'error',
+          title: 'فشل في تقديم التقرير',
+          text: 'يرجى تسجيل الدخول أولاً.',
+          confirmButtonText: 'حسنًا',
+          confirmButtonColor: '#28696A',
+        });
       }
     }
   };
@@ -123,21 +174,40 @@ const ArticleDetails = () => {
       // Send PUT request to toggle bookmark state
       const response = await axios.put(
         `http://localhost:8000/user/bookmarks/${id}`,
-        {}, 
-        { withCredentials: true } 
+        {},
+        { withCredentials: true }
       );
-      
+  
       if (response.data.success) {
+        // Toggle bookmark state
         setIsBookmarked(!isBookmarked);
+  
+        // Show success alert
+        Swal.fire({
+          icon: 'success',
+          title: 'تمت الإضافة إلى المفضلة بنجاح',
+          showConfirmButton: false,
+          timer: 1500, // Close alert after 1.5 seconds
+        });
       } else {
-        alert('فشل في حفظ المقال في المفضلة');
+        // Show error alert if the request was not successful
+        Swal.fire({
+          icon: 'error',
+          title: 'فشل في حفظ المقال في المفضلة',
+          text: 'يرجى المحاولة مرة أخرى.',
+        });
       }
     } catch (err) {
       console.error('Error bookmarking article:', err);
-      alert('فشل في حفظ المقال في المفضلة. يرجى تسجيل الدخول.');
+  
+      // Show error alert for login issue
+      Swal.fire({
+        icon: 'error',
+        title: 'فشل في حفظ المقال في المفضلة',
+        text: 'يرجى تسجيل الدخول أولاً.',
+      });
     }
   };
-
   // Loading state
   if (loading) return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-[#28696A] to-[#F0E6D7]/30">
@@ -187,76 +257,93 @@ const ArticleDetails = () => {
           </article>
 
           <div className="flex items-center gap-4 mb-10">
-            <button
-              onClick={handleLike}
-              className="px-6 py-2.5 bg-[#28696A] text-white rounded-full flex items-center hover:bg-[#28696A]/80 transition-colors duration-300"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 rtl:ml-2" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
-              </svg>
-              إعجاب ({likes})
-            </button>
+{/* زر الإعجاب */}
+<button
+  onClick={handleLike}
+  title="إعجاب"
+  className={`p-3 bg-white border border-[#28696A] rounded-full flex items-center hover:bg-[#28696A]/20 transition-colors duration-300`}
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className={`h-6 w-6 ${isLiked ? 'text-[#28696A]' : 'text-[#28696A]/50'}`} // تغيير لون الأيقونة فقط
+    viewBox="0 0 20 20"
+    fill="currentColor"
+  >
+    <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+  </svg>
+</button>
 
-            <button
-              onClick={handleBookmark}
-              className={`px-6 py-2.5 ${isBookmarked ? 'bg-[#F4AE3F]' : 'bg-white'} border border-[#28696A] text-[#213058] rounded-full flex items-center hover:bg-[#F4AE3F]/20 transition-colors duration-300`}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 rtl:ml-2" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M5 2a2 2 0 00-2 2v14l5-3 5 3V4a2 2 0 00-2-2H5zm0 2h6v12l-3-1.8L5 16V4z" clipRule="evenodd" />
-              </svg>
-              {isBookmarked ? 'تم الحفظ' : 'حفظ'}
-            </button>
+{/* زر الحفظ */}
+<button
+  onClick={handleBookmark}
+  title={isBookmarked ? 'تم الحفظ' : 'حفظ'}
+  className={`p-3 bg-white border border-[#28696A] rounded-full flex items-center hover:bg-[#28696A]/20 transition-colors duration-300`}
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className={`h-6 w-6 ${isBookmarked ? 'text-[#28696A]' : 'text-[#28696A]/50'}`} // تغيير لون الأيقونة فقط
+    viewBox="0 0 20 20"
+    fill="currentColor"
+  >
+    <path fillRule="evenodd" d="M5 2a2 2 0 00-2 2v14l5-3 5 3V4a2 2 0 00-2-2H5zm0 2h6v12l-3-1.8L5 16V4z" clipRule="evenodd" />
+  </svg>
+</button>
 
-            <div className="relative">
-              <button
-                onClick={() => setIsShareOpen(!isShareOpen)}
-                className="px-6 py-2.5 bg-white border border-[#28696A] text-[#213058] rounded-full flex items-center hover:bg-[#F0E6D7] transition-colors duration-300"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 rtl:ml-2" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M15 8a3 3 0 10-5.196-2.02L5 9.586a3 3 0 100 4.828l4.804 3.606A3 3 0 1015 16v-2a1 1 0 00-1-1 1 1 0 00-.553.168l-3.25-2.437a1 1 0 000-1.462l3.25-2.437A1 1 0 0014 7a1 1 0 001-1V4z" />
-                </svg>
-                مشاركة
-              </button>
-              {isShareOpen && (
-                <div className="absolute top-12 rtl:left-0 ltr:right-0 bg-white shadow-lg rounded-lg p-2 z-10 flex gap-2">
-                  <button
-                    onClick={() => handleShare('facebook')}
-                    className="p-2 rounded-full hover:bg-[#F0E6D7] transition-colors duration-200"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#28696A]" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047v-2.642c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.234 2.686.234v2.953h-1.514c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                    </svg>
-                  </button>
-                  <button
-                    onClick={() => handleShare('twitter')}
-                    className="p-2 rounded-full hover:bg-[#F0E6D7] transition-colors duration-200"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#28696A]" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
-                    </svg>
-                  </button>
-                  <button
-                    onClick={() => handleShare('linkedin')}
-                    className="p-2 rounded-full hover:bg-[#F0E6D7] transition-colors duration-200"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#28696A]" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                    </svg>
-                  </button>
-                </div>
-              )}
-            </div>
+  {/* زر المشاركة */}
+  <div className="relative">
+    <button
+      onClick={() => setIsShareOpen(!isShareOpen)}
+      title="مشاركة"
+      className="p-3 bg-white border border-[#28696A] text-[#213058] rounded-full flex items-center hover:bg-[#F0E6D7] transition-colors duration-300"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M15 8a3 3 0 10-5.196-2.02L5 9.586a3 3 0 100 4.828l4.804 3.606A3 3 0 1015 16v-2a1 1 0 00-1-1 1 1 0 00-.553.168l-3.25-2.437a1 1 0 000-1.462l3.25-2.437A1 1 0 0014 7a1 1 0 001-1V4z" />
+      </svg>
+    </button>
+    {isShareOpen && (
+      <div className="absolute top-12 rtl:left-0 ltr:right-0 bg-white shadow-lg rounded-lg p-2 z-10 flex gap-2">
+        <button
+          onClick={() => handleShare('facebook')}
+          title="مشاركة على فيسبوك"
+          className="p-2 rounded-full hover:bg-[#F0E6D7] transition-colors duration-200"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#28696A]" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047v-2.642c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.234 2.686.234v2.953h-1.514c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+          </svg>
+        </button>
+        <button
+          onClick={() => handleShare('twitter')}
+          title="مشاركة على تويتر"
+          className="p-2 rounded-full hover:bg-[#F0E6D7] transition-colors duration-200"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#28696A]" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
+          </svg>
+        </button>
+        <button
+          onClick={() => handleShare('linkedin')}
+          title="مشاركة على لينكد إن"
+          className="p-2 rounded-full hover:bg-[#F0E6D7] transition-colors duration-200"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#28696A]" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+          </svg>
+        </button>
+      </div>
+    )}
+  </div>
 
-            <button
-              onClick={handleReport}
-              className="px-6 py-2.5 bg-white border border-[#28696A] text-[#213058] rounded-full flex items-center hover:bg-[#F0E6D7] transition-colors duration-300"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 rtl:ml-2" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-              </svg>
-              إبلاغ
-            </button>
-          </div>
+  {/* زر الإبلاغ */}
+  <button
+    onClick={handleReport}
+    title="إبلاغ"
+    className="p-3 bg-white border border-[#28696A] text-[#213058] rounded-full flex items-center hover:bg-[#F0E6D7] transition-colors duration-300"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+    </svg>
+  </button>
+</div>
 
           <div className="bg-[#F0E6D7]/30 p-6 rounded-2xl mb-10">
             <h2 className="text-2xl font-bold text-[#213058] mb-6 flex items-center rtl:text-right">

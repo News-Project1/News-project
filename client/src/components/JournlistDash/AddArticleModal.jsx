@@ -278,7 +278,7 @@ const AddArticleModal = ({ isOpen, onClose, onArticleAdded }) => {
   const [success, setSuccess] = useState("");
   const [previewImage, setPreviewImage] = useState(null);
 
-  // Fetch categories when the modal opens
+  
   useEffect(() => {
     if (isOpen) {
       axios
@@ -293,7 +293,6 @@ const AddArticleModal = ({ isOpen, onClose, onArticleAdded }) => {
     }
   }, [isOpen]);
 
-  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -302,7 +301,6 @@ const AddArticleModal = ({ isOpen, onClose, onArticleAdded }) => {
     }));
   };
 
-  // Handle featured image file change
   const handleFeaturedImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -311,7 +309,6 @@ const AddArticleModal = ({ isOpen, onClose, onArticleAdded }) => {
         featuredImage: file,
       }));
       
-      // Create preview URL
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result);
@@ -320,7 +317,6 @@ const AddArticleModal = ({ isOpen, onClose, onArticleAdded }) => {
     }
   };
 
-  // Handle media files change
   const handleMediaChange = (e) => {
     const files = Array.from(e.target.files);
     setFormData((prevData) => ({
@@ -329,7 +325,6 @@ const AddArticleModal = ({ isOpen, onClose, onArticleAdded }) => {
     }));
   };
 
-  // Handle category selection changes
   const handleCategoryChange = (e) => {
     const selectedCategoryId = e.target.value;
     setFormData((prevData) => ({
@@ -338,7 +333,6 @@ const AddArticleModal = ({ isOpen, onClose, onArticleAdded }) => {
     }));
   };
 
-  // Handle tags input changes
   const handleTagsChange = (value) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -346,7 +340,6 @@ const AddArticleModal = ({ isOpen, onClose, onArticleAdded }) => {
     }));
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -388,7 +381,6 @@ const AddArticleModal = ({ isOpen, onClose, onArticleAdded }) => {
       
       setSuccess("تم إضافة المقال بنجاح");
       
-      // Reset form after successful submission
       setTimeout(() => {
         setFormData({
           title: "",
