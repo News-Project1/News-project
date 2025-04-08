@@ -4,7 +4,7 @@ exports.isAuthenticated = (req, res, next) => {
   let token =
     req.cookies.authToken || 
     (req.headers.authorization
-      ? req.headers.authorization.split(" ")[1] // Check the Authorization header
+      ? req.headers.authorization.split(" ")[1] 
       : null);
 
   console.log("Token:", token); 

@@ -26,23 +26,26 @@ import CartoonSection from './components/CartoonSection/CartoonSection';
 import Dashboard from "./components/JournlistDash/Dashboard";
 import VideoList from './components/Video/VideoList';
 import VideoDetail from './components/Video/VideoDetail';
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
-    <Router>
-      <Main />
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Main />
+      </Router>
+    </AuthProvider>
   );
 }
 
 function Main() {
   const location = useLocation();
-  
+
   // Define the routes where Navbar and Footer should be hidden
   const hideNavbarAndFooter = [
-    "/login", 
-    "/register", 
-    "/admin", 
+    "/login",
+    "/register",
+    "/admin",
     "/journalist"
   ];
 
@@ -53,7 +56,7 @@ function Main() {
   return (
     <>
       {!shouldHideNavbarAndFooter && <Navbar />}
-      
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<AboutUs />} />
