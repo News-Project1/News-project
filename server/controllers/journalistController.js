@@ -1,11 +1,11 @@
 const Article = require("../models/Article");
 const Category = require("../models/Category");
-const upload = require("../middleware/upload"); // Import Multer middleware
+const upload = require("../middleware/upload"); 
 
 // ✅ Get all articles by the logged-in journalist (excluding soft-deleted ones)
 exports.getArticles = async (req, res) => {
   try {
-    const { page = 1, limit = 6 } = req.query; // Default to page 1 and 6 items per page
+    const { page = 1, limit = 6 } = req.query; 
     const offset = (page - 1) * limit;
 
     // Fetch paginated articles
@@ -24,7 +24,6 @@ exports.getArticles = async (req, res) => {
       media: article.media.map((mediaUrl) => `http://localhost:8000/${mediaUrl}`),
     }));
 
-    // Send response with articles and pagination metadata
     res.json({
       articles: articlesWithFullUrls,
       totalItems,
@@ -41,8 +40,8 @@ exports.createArticle = async (req, res) => {
   try {
     // Handle file uploads using Multer
     upload.fields([
-      { name: "featuredImage", maxCount: 1 }, // Single file for featuredImage
-      { name: "media", maxCount: 10 }, // Up to 10 files for media
+      { name: "featuredImage", maxCount: 1 }, 
+      { name: "media", maxCount: 10 }, 
     ])(req, res, async (err) => {
       if (err) {
         return res.status(400).json({ error: err.message });
@@ -60,27 +59,23 @@ exports.createArticle = async (req, res) => {
         media: media,
         categoryIds: req.body.categoryIds,
         tags: req.body.tags,
-        author: req.user._id, // Assign logged-in journalist as the author
+        author: req.user._id, 
         likes: [],
       });
 
-      // Save the new article
       await newArticle.save();
 
-      // Populate the categoryIds field with full category details
       const populatedArticle = await Article.findById(newArticle._id).populate(
         "categoryIds",
         "name description"
       );
 
-      // Construct full URLs for featuredImage and media
       const articleWithFullUrls = {
         ...populatedArticle.toObject(),
         featuredImage: `http://localhost:8000/${populatedArticle.featuredImage}`,
         media: populatedArticle.media.map((mediaUrl) => `http://localhost:8000/${mediaUrl}`),
       };
 
-      // Send the populated article with full URLs as the response
       res.status(201).json(articleWithFullUrls);
     });
   } catch (err) {

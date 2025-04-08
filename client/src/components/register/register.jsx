@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import background from "../../images/background.jpeg";
 import { FcGoogle } from "react-icons/fc";
+import { AuthContext } from "../../context/AuthContext"; 
 
 const Register = () => {
   const [full_name, setName] = useState("");
@@ -10,6 +11,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { setUser } = useContext(AuthContext); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,10 +22,18 @@ const Register = () => {
         { full_name, email, password },
         { withCredentials: true }
       );
+      
       const { user } = response.data;
-      if (user.role === "admin") navigate("/admin");
-      else if (user.role === "journalist") navigate("/journalist");
-      else navigate("/");
+      setUser(user); 
+      
+      // Redirect based on role
+      if (user.role === "admin") {
+        navigate("/admin");
+      } else if (user.role === "journalist") {
+        navigate("/journalist");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       setError(err.response?.data?.message || "حدث خطأ ما");
     }
@@ -54,7 +64,7 @@ const Register = () => {
               required
               value={full_name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full bg-transparent border border-white rounded-lg px-4 py-2 text-white focus:outline-none"
+              className="w-full bg-transparent border border-white rounded-lg px-4 py-2 text-white focus:outline-none placeholder:text-white/50 focus:bg-white/5 backdrop-blur-sm"
               placeholder="الاسم"
             />
           </div>
@@ -64,7 +74,7 @@ const Register = () => {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-transparent border border-white rounded-lg px-4 py-2 text-white focus:outline-none"
+              className="w-full bg-transparent border border-white rounded-lg px-4 py-2 text-white focus:outline-none placeholder:text-white/50 focus:bg-white/5 backdrop-blur-sm"
               placeholder="البريد الإلكتروني"
             />
           </div>
@@ -74,7 +84,7 @@ const Register = () => {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-transparent border border-white rounded-lg px-4 py-2 text-white focus:outline-none"
+              className="w-full bg-transparent border border-white rounded-lg px-4 py-2 text-white focus:outline-none placeholder:text-white/50 focus:bg-white/5 backdrop-blur-sm"
               placeholder="كلمة المرور"
             />
           </div>

@@ -1,14 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import background from "../../images/background.jpeg";
 import { FcGoogle } from "react-icons/fc";
+import { AuthContext } from "../../context/AuthContext"; // Import the AuthContext
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { setUser } = useContext(AuthContext); // Get setUser from context
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,10 +21,18 @@ const Login = () => {
         { email, password },
         { withCredentials: true }
       );
+      
       const { user } = response.data;
-      if (user.role === "admin") navigate("/admin");
-      else if (user.role === "journalist") navigate("/journalist");
-      else navigate("/");
+      setUser(user); // Update the global auth state
+      
+      // Redirect based on role
+      if (user.role === "admin") {
+        navigate("/admin");
+      } else if (user.role === "journalist") {
+        navigate("/journalist");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       setError(err.response?.data?.message || "حدث خطأ ما");
     }

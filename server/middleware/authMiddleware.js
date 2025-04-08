@@ -18,11 +18,11 @@ exports.isAuthenticated = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("Decoded User:", decoded); // Log the decoded token for debugging
+    console.log("Decoded User:", decoded); 
     req.user = decoded;
     next();
   } catch (error) {
-    console.error("Token verification failed:", error); // Log the error for debugging
+    console.error("Token verification failed:", error); 
     return res.status(401).json({ message: "Invalid token" });
   }
 };

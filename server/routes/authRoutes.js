@@ -1,7 +1,7 @@
-// authRoutes.js
 const express = require("express");
 const passport = require("passport");
-const { signin, logoutUser , getUserProfile} = require("../controllers/loginController");
+const { signin, logoutUser , getUserProfile, getMe} = require("../controllers/loginController");
+const { isAuthenticated } = require('../middleware/authMiddleware'); 
 const { signup, googleAuth } = require("../controllers/signupController");
 
 const router = express.Router();
@@ -9,7 +9,8 @@ const router = express.Router();
 router.post("/signup", signup);
 router.post("/signin", signin);
 router.post("/logout", logoutUser);
-router.get("/profile",  getUserProfile);
+router.get("/me", isAuthenticated , getMe);
+router.get("/profile",isAuthenticated , getUserProfile);
 
 
 // Google OAuth Login

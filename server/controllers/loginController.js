@@ -7,7 +7,6 @@ const mongoose = require('mongoose');
 
 dotenv.config();
 
-const JWT_SECRET = process.env.JWT_SECRET;
 
 const signinSchema = Joi.object({
   email: Joi.string().email().required(),
@@ -42,7 +41,7 @@ exports.signin = async (req, res) => {
 
     const token = jwt.sign(
       { _id: user._id, email: user.email, role: user.role }, // ✅ Include role in token
-      JWT_SECRET,
+      process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
 
@@ -53,11 +52,11 @@ exports.signin = async (req, res) => {
 
     return res.status(200).json({
       message: "Login successful",
-      token,
       user: {
         id: user._id,
+        name: user.name,
         email: user.email,
-        role: user.role, // ✅ Return role in response
+        role: user.role, 
       },
     });
   } catch (error) {
@@ -75,25 +74,12 @@ exports.logoutUser = (req, res) => {
 
 exports.getUserProfile = async (req, res) => {
   try {
-    // Extract token from req.body or cookies
-    const token = req.body.token || req.cookies.authToken;
-
-    if (!token) {
-      return res.status(401).json({ message: "No token provided" });
-    }
-
-    // Verify and decode token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    console.log("Decoded User ID from token:", decoded._id);  // Use _id instead of userId
-
-    // Validate user ID
-    if (!decoded._id || !mongoose.Types.ObjectId.isValid(decoded._id)) {  // Use _id here as well
+  
+    if (!req.user._id || !mongoose.Types.ObjectId.isValid(req.user._id)) {  
       return res.status(400).json({ message: "Invalid user ID" });
     }
 
-    // Fetch user profile from database
-    const user = await User.findById(decoded._id).select("-password");  // Use _id here too
+    const user = await User.findById(req.user._id).select("-password");  
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -106,4 +92,30 @@ exports.getUserProfile = async (req, res) => {
   }
 };
 
+exports.getMe = async (req, res) => {
+  try {
+    // Since `isAuthenticated` middleware attaches the user to `req.user`
+    const userId = req.user._id; // Extract the user ID from the token
+    console.log(userId);
+    // Find user by their ID
+    const user = await User.findById(userId).select('-password'); // Exclude password field
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    return res.status(200).json({
+      success: true,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,  
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
 
