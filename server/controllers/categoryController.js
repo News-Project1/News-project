@@ -14,7 +14,6 @@ exports.createCategory = async (req, res) => {
 // ✅ Get all categories (excluding soft-deleted ones)
 exports.getCategories = async (req, res) => {
   try {
-    // Fetch categories where isDeleted is false or not set
     const categories = await Category.find({
       $or: [
         { isDeleted: false },

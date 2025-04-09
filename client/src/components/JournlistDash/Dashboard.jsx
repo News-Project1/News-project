@@ -38,10 +38,10 @@ export default function JournalistDash() {
         {/* Content Area */}
         <main className="p-4 sm:p-6 overflow-y-auto space-y-6 sm:space-y-8">
           <Routes>
-            <Route path="/" element={<Articles />} /> {/* Matches /journalist */}
-            <Route path="/analytics" element={<Analytics />} /> {/* Matches /journalist/analytics */}
-            <Route path="/status" element={<Status />} /> {/* Matches /journalist/status */}
-            <Route path="/profile" element={<Profile />} /> {/* Matches /journalist/profile */}
+            <Route path="/" element={<Articles />} /> 
+            <Route path="/analytics" element={<Analytics />} /> 
+            <Route path="/status" element={<Status />} /> 
+            <Route path="/profile" element={<Profile />} /> 
           </Routes>
         </main>
       </div>

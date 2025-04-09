@@ -1,4 +1,3 @@
-// routes/mostLikeRoutes.js
 const express = require('express');
 const router = express.Router();
 const mostLikeController = require('../controllers/mostLikeController');

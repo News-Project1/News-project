@@ -13,9 +13,8 @@ const articleSchema = new Schema(
     status: { type: String, enum: ['pending', 'published', 'rejected'], default: 'pending' },
     publishDate: { type: Date },
     likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    views: { type: Number, default: 0 }, // ✅ New: Track article views in MongoDB
-    isDeleted: { type: Boolean, default: false }, // ✅ Soft delete field
-    // ✅ NEW: Connects article with a premium video
+    views: { type: Number, default: 0 }, 
+    isDeleted: { type: Boolean, default: false }, 
     videoId: { type: Schema.Types.ObjectId, ref: 'Video' }
   },
   { timestamps: true }

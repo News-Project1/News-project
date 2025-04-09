@@ -11,7 +11,7 @@ const userSchema = new Schema(
       enum: ["reader", "journalist", "admin"],
       default: "reader",
     },
-    isSubscribed: { type: Boolean, default: false }, // Tracks if user has paid
+    isSubscribed: { type: Boolean, default: false }, 
     isDeleted: { type: Boolean, default: false },
     bookmarks: [{ type: Schema.Types.ObjectId, ref: "Article" }],
   },

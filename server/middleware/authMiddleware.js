@@ -2,15 +2,14 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 exports.isAuthenticated = (req, res, next) => {
-  // Read the token from either the cookie or the Authorization header
   let token =
-    req.cookies.authToken || // Check the cookie
+    req.cookies.authToken || 
     (req.headers.authorization
-      ? req.headers.authorization.split(" ")[1] // Check the Authorization header
+      ? req.headers.authorization.split(" ")[1] 
       : null);
 
-  console.log("Token:", token); // Log the token for debugging
-  console.log("Token source:", req.cookies.authToken ? "Cookie" : "Authorization Header"); // Log the token source
+  console.log("Token:", token); 
+  console.log("Token source:", req.cookies.authToken ? "Cookie" : "Authorization Header"); 
 
   if (!token) {
     return res.status(401).json({ message: "Access denied. No token provided." });

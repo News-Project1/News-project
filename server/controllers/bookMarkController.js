@@ -1,7 +1,6 @@
 const User = require("../models/User");
 const Article = require("../models/Article");
 
-// جلب المقالات المحفوظة
 const getBookmarks = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).populate({
@@ -30,7 +29,6 @@ const getBookmarks = async (req, res) => {
   }
 };
 
-// إضافة/إزالة مقال من المفضلة
 const toggleBookmark = async (req, res) => {
   const { articleId } = req.params;
 
@@ -81,7 +79,6 @@ const toggleBookmark = async (req, res) => {
   }
 };
 
-// تصدير الدوال مباشرة
 module.exports = {
   getBookmarks,
   toggleBookmark,

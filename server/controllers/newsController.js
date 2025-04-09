@@ -1,6 +1,5 @@
 const News = require("../models/Article");
 
-// ✅ جلب الأخبار العاجلة
 const getBreakingNews = async (req, res) => {
   try {
     const news = await News.find().sort({ createdAt: -1 }).limit(5);

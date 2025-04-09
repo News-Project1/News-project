@@ -19,7 +19,6 @@ const signinSchema = Joi.object({
     .required(),
 });
 
-// ✅ SIGN IN (Login User)
 exports.signin = async (req, res) => {
   try {
     const { error } = signinSchema.validate(req.body);
@@ -40,7 +39,7 @@ exports.signin = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { _id: user._id, email: user.email, role: user.role }, // ✅ Include role in token
+      { _id: user._id, email: user.email, role: user.role }, 
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -66,7 +65,6 @@ exports.signin = async (req, res) => {
   }
 };
 
-// ✅ LOGOUT (Clear Token)
 exports.logoutUser = (req, res) => {
   res.clearCookie("authToken");
   return res.status(200).json({ message: "Logged out successfully" });
@@ -94,11 +92,9 @@ exports.getUserProfile = async (req, res) => {
 
 exports.getMe = async (req, res) => {
   try {
-    // Since `isAuthenticated` middleware attaches the user to `req.user`
-    const userId = req.user._id; // Extract the user ID from the token
+    const userId = req.user._id; 
     console.log(userId);
-    // Find user by their ID
-    const user = await User.findById(userId).select('-password'); // Exclude password field
+    const user = await User.findById(userId).select('-password'); 
 
     if (!user) {
       return res.status(404).json({ message: 'User not found.' });

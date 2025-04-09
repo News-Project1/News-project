@@ -1,6 +1,5 @@
 const Video = require('../models/Video');
 
-// الحصول على جميع الفيديوهات
 exports.getAllVideos = async (req, res) => {
   try {
     const videos = await Video.find({ isDeleted: false });
@@ -10,7 +9,6 @@ exports.getAllVideos = async (req, res) => {
   }
 };
 
-// الحصول على فيديو بواسطة الـ ID
 exports.getVideoById = async (req, res) => {
   try {
     const video = await Video.findById(req.params.id);
@@ -23,7 +21,6 @@ exports.getVideoById = async (req, res) => {
   }
 };
 
-// إنشاء فيديو جديد
 exports.createVideo = async (req, res) => {
   try {
     const { title, description, videoUrl, embedUrl, thumbnail, isPremium } = req.body;
