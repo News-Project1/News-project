@@ -3,7 +3,7 @@ const router = express.Router();
 const adminController = require('../controllers/adminController');
 const { isAuthenticated, isAdmin } = require('../middleware/adminMiddleware');
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' }); // مجلد لتخزين الصور المرفوعة
+const upload = multer({ dest: 'uploads/' }); 
 // إدارة المقالات
 router.get('/articles',isAuthenticated, isAdmin,adminController.getArticles);
 router.put('/articles/:id/status', isAuthenticated, isAdmin,adminController.updateArticleStatus);

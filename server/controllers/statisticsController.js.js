@@ -51,17 +51,13 @@ const Article = require('../models/Article'); // نموذج المقالات
 // const User = require('../models/User'); // نموذج المستخدمين
 const Video = require('../models/Video'); // نموذج الفيديوهات
 
-// دالة لجلب الإحصائيات
 exports.getStatistics = async (req, res) => {
   try {
-    // جلب عدد المقالات المنشورة
     const articleCount = await Article.countDocuments({ status: 'published', isDeleted: false });
 
 
-    // جلب عدد الوثائقيات المميزة (الفيديوهات المدفوعة)
     const documentaryCount = await Video.countDocuments({ isPremium: true, isDeleted: false });
 
-    // جلب عدد المتابعين الجدد شهريًا
     const lastMonth = new Date();
     lastMonth.setMonth(lastMonth.getMonth() - 1);
     
@@ -73,13 +69,11 @@ exports.getStatistics = async (req, res) => {
     // جلب عدد الفيديوهات
     const videoCount = await Video.countDocuments({ isDeleted: false });
 
-    // حساب إجمالي المشاهدات لجميع الفيديوهات
     const totalVideoViews = await Video.aggregate([
       { $match: { isDeleted: false } },
       { $group: { _id: null, totalViews: { $sum: '$views' } } }
     ]);
 
-    // حساب إجمالي الإعجابات لجميع الفيديوهات
     const totalVideoLikes = await Video.aggregate([
       { $match: { isDeleted: false } },
       { $unwind: '$likes' },

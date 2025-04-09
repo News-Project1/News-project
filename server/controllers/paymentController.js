@@ -125,15 +125,13 @@ const processPayment = async (req, res) => {
     // Save the payment record to the database
     await payment.save();
 
-    // Find the user by their ID and update the isSubscribed flag
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    // Update the isSubscribed flag to true
     user.isSubscribed = true;
-    await user.save(); // Save the updated user
+    await user.save(); 
 
     res.status(200).json({ success: true, message: "Payment processed successfully and subscription updated" });
   } catch (error) {

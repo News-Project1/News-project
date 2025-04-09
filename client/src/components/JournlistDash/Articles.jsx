@@ -97,7 +97,6 @@ export default function Articles() {
     );
   };
 
-  // Execute soft delete
   const handleSoftDelete = async (articleId) => {
     
     toast.dismiss(`delete-${articleId}`);
@@ -113,7 +112,6 @@ export default function Articles() {
       
       fetchArticles(currentPage);
 
-      // Success toast
       toast.success("تم حذف المقال بنجاح", {
         position: "bottom-right",
         autoClose: 3000,
@@ -132,7 +130,6 @@ export default function Articles() {
     }
   };
 
-  // Handle adding a new article
   const handleArticleAdded = (newArticle) => {
     
     fetchArticles(currentPage);
@@ -144,7 +141,6 @@ export default function Articles() {
     });
   };
 
-  // Handle updating an article
   const handleArticleUpdated = (updatedArticle) => {
     
     fetchArticles(currentPage);
@@ -155,13 +151,11 @@ export default function Articles() {
     });
   };
 
-  // Open the edit modal for a specific article
   const handleEditClick = (article) => {
     setSelectedArticle(article);
     setIsEditModalOpen(true);
   };
 
-  // Function to translate article status to Arabic
   const translateStatusToArabic = (status) => {
     switch (status) {
       case "pending":
@@ -175,7 +169,6 @@ export default function Articles() {
     }
   };
 
-  // Function to get status icon and color
   const getStatusStyles = (status) => {
     switch (status) {
       case "pending":

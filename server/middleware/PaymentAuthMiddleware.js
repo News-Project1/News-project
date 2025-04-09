@@ -73,15 +73,14 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 exports.isAuthenticated = (req, res, next) => {
-  // Read the token from either the cookie or the Authorization header
   let token =
-    req.cookies.authToken || // Check the cookie
+    req.cookies.authToken || 
     (req.headers.authorization
-      ? req.headers.authorization.split(" ")[1] // Check the Authorization header
+      ? req.headers.authorization.split(" ")[1] 
       : null);
 
-  console.log("Token:", token); // Log the token for debugging
-  console.log("Token source:", req.cookies.authToken ? "Cookie" : "Authorization Header"); // Log the token source
+  console.log("Token:", token); 
+  console.log("Token source:", req.cookies.authToken ? "Cookie" : "Authorization Header"); 
 
   if (!token) {
     return res.status(401).json({ message: "Access denied. No token provided." });
@@ -89,11 +88,11 @@ exports.isAuthenticated = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("Decoded User:", decoded); // Log the decoded token for debugging
+    console.log("Decoded User:", decoded); 
     req.user = decoded;
     next();
   } catch (error) {
-    console.error("Token verification failed:", error); // Log the error for debugging
+    console.error("Token verification failed:", error); 
     return res.status(401).json({ message: "Invalid token" });
   }
 };

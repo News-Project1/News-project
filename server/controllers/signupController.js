@@ -10,7 +10,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 const signupSchema = Joi.object({
   full_name: Joi.string()
-    .regex(/^\S+\s+\S+\s+\S+\s+\S+$/) // Must contain at least 4 words
+    .regex(/^\S+\s+\S+\s+\S+\s+\S+$/) 
     .message("Full name must have at least 4 words")
     .required(),
   email: Joi.string().email().required(),

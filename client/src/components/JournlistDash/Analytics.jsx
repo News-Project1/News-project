@@ -25,9 +25,7 @@ export default function Analytics() {
       });
   }, []);
 
-  // Prepare data for charts (when data is available)
   const prepareChartData = () => {
-    // Only prepare data if articles exist
     if (!articles.length) return { chartData: [], viewDistribution: [], topArticles: [] };
 
     const chartData = articles.map(article => ({
@@ -38,30 +36,25 @@ export default function Analytics() {
       id: article.id
     }));
 
-    // Distribution data for pie chart
     const viewDistribution = articles.map(article => ({
       name: article.title.length > 15 ? article.title.substring(0, 15) + "..." : article.title,
       value: article.views
     }));
 
-    // Top performing articles
     const topArticles = [...articles].sort((a, b) => b.views - a.views).slice(0, 5);
 
     return { chartData, viewDistribution, topArticles };
   };
 
-  // Function to calculate engagement rate (likes/views)
   function calculateEngagement(article) {
     if (!article.views) return 0;
     return Math.round(((article.likes?.length || 0) / article.views) * 100);
   }
 
-  // Calculate total metrics
   const totalViews = articles.reduce((sum, article) => sum + article.views, 0);
   const totalLikes = articles.reduce((sum, article) => sum + (article.likes?.length || 0), 0);
   const totalArticles = articles.length;
 
-  // Colors for pie chart
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#ff7300'];
 
   if (loading) {
